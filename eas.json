@@ -1,0 +1,15 @@
+{
+  "cli": {
+    "version": ">=2.1.0"
+  },
+  "build": {
+    "dev": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "staging": {
+      "distribution": "internal"
+    },
+    "prod": {}
+  }
+}

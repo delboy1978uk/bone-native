@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Bone Native",
+    "owner": "delboy1978uk",
+    "privacy": "unlisted",
+    "scheme": "bone",
+    "slug": "bone-native",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./app/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./app/assets/background.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#e63c4b"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.delboy1978uk.bone",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.delboy1978uk.bone",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./app/assets/favicon.png"
+    },
+    "description": "A marketplace for selling the stuff you dont need anymore",
+    "extra": {
+      "eas": {
+        "projectId": "65012086-8059-4026-b735-35e8c254ea80"
+      }
+    }
+  }
+}
