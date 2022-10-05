@@ -8,7 +8,6 @@ import colors from '../config/colors'
 import ContactSellerForm from '../components/ContactSellerForm';
 import ListItem from '../components/ListItem'
 import Text from '../components/Text'
-import listingsApi from "../api/listings";
 
 function ListingDetailsScreen({ route }) {
 

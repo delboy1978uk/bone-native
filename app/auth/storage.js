@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
 const key = 'authToken';
+const clientKey = 'clientSettings';
 
 const getUser = async () => {
     const token = await getToken();
@@ -33,4 +34,20 @@ const removeToken = async () => {
     }
 }
 
-export default {getToken, getUser, removeToken, storeToken };
+const getClientCredentials = async () => {
+    try {
+        return await SecureStore.getItemAsync(clientKey);
+    } catch (error) {
+        console.log('error getting the client credentials', error);
+    }
+}
+
+const storeClientCredentials = async authToken => {
+    try {
+        await SecureStore.setItemAsync(key, clientKey);
+    } catch (error) {
+        console.log('error storing the client credentials', error);
+    }
+};
+
+export default { getClientCredentials, getToken, getUser, removeToken, storeClientCredentials, storeToken };
