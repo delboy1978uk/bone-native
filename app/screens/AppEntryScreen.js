@@ -44,12 +44,17 @@ export default function AppEntryScreen() {
 
             if (response.ok) {
                 const token = response.data.access_token;
-                console.log('client registration')
                 const registerResponse = await RegistrationClient.registerDevice(token);
-                console.log(registerResponse.data);
+
+                if (registerResponse.ok) {
+                    const client = registerResponse.data;
+                    authStorage.storeClientCredentials(client);
+                }
             } else {
                 logger.log(response.problem);
             }
+        } else {
+            console.log('we have credentials!', credentials);
         }
     };
 
