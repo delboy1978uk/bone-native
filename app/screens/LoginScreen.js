@@ -4,6 +4,7 @@ import {useNavigation} from "@react-navigation/native";
 import * as Yup from 'yup'
 
 import authApi from '../api/auth';
+import authStorage from '../auth/storage';
 import {ErrorMessage, FormField, Form, SubmitButton} from '../components/forms'
 import Screen from '../components/Screen'
 
@@ -16,8 +17,9 @@ function LoginScreen(props) {
     const [loginFailed, setLoginFailed] = useState(false);
 
     const handleSubmit = async ({email, password}) => {
-        const result = await authApi.login(email, password);
-
+        const clientSettings = await authStorage.getClientCredentials();
+        const result = await authApi.login(email, password, clientSettings);
+        console.log(result);
         if (!result.ok) {
             return setLoginFailed(true);
         }
