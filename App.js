@@ -8,8 +8,8 @@ import TestZone from './app/screens/TestZone';
 export default function App() {
     return (
         <Screen style={{height: '100%'}}>
-            {/*<AppEntryScreen />*/}
-            <TestZone />
+            <AppEntryScreen />
+            {/*<TestZone />*/}
         </Screen>
     )
 }
