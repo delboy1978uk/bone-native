@@ -15,7 +15,8 @@ function Screen({children, style}) {
 const styles = StyleSheet.create({
     screen: {
         paddingTop: Constants.statusBarHeight,
-        flex: 1
+        flex: 1,
+        height: '100%'
     },
     view: {
         flex: 1

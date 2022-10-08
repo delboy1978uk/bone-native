@@ -7,7 +7,11 @@ import TestZone from './app/screens/TestZone';
 
 export default function App() {
     return (
+<<<<<<< Updated upstream
         <Screen style={{height: '100%'}}>
+=======
+        <Screen>
+>>>>>>> Stashed changes
             <AppEntryScreen />
             {/*<TestZone />*/}
         </Screen>
