@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
 const key = 'authToken';
+const refreshKey = 'refreshToken';
 const clientId = 'clientId';
 const clientSecret = 'clientSecret';
 
@@ -35,10 +36,47 @@ const removeToken = async () => {
     }
 }
 
+const storeRefreshToken = async refreshToken => {
+    try {
+        await SecureStore.setItemAsync(refreshKey, refreshToken);
+    } catch (error) {
+        console.log('error storing the refresh token', error);
+    }
+};
+
+const getRefreshToken = async () => {
+    try {
+        return await SecureStore.getItemAsync(refreshKey);
+    } catch (error) {
+        console.log('error getting the refresh token', error);
+    }
+};
+
+const removeRefreshToken = async () => {
+    try {
+        await SecureStore.deleteItemAsync(refreshKey);
+    } catch (error) {
+        console.log('error removing the refresh token', error);
+    }
+}
+
+const removeClientCredentials = async () => {
+    try {
+        await SecureStore.deleteItemAsync(clientId);
+        await SecureStore.deleteItemAsync(clientSecret);
+    } catch (error) {
+        console.log('error removing the auth token', error);
+    }
+}
+
 const getClientCredentials = async () => {
     try {
         const id = await SecureStore.getItemAsync(clientId);
         const secret = await SecureStore.getItemAsync(clientSecret);
+
+        if (!id || !secret) {
+            return null;
+        }
 
         return {
             client_id: id,
@@ -58,4 +96,4 @@ const storeClientCredentials = async settings => {
     }
 };
 
-export default { getClientCredentials, getToken, getUser, removeToken, storeClientCredentials, storeToken };
+export default { getClientCredentials, getRefreshToken, getToken, getUser, removeClientCredentials, removeRefreshToken, removeToken, storeClientCredentials, storeRefreshToken, storeToken };

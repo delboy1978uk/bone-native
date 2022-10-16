@@ -1,7 +1,8 @@
 import client from './client';
 
-const register = userInfo => client.post('/users', userInfo);
+// const getProfile = () => client.get('/ping', {});
+const getProfile = () => client.get('/api/user/profile', {});
 
 export default {
-    register,
+    getProfile,
 };

@@ -59,6 +59,7 @@ export default function AppEntryScreen() {
     };
 
     useEffect(() => {
+        // authStorage.removeClientCredentials();
         async function prepare() {
             try {
                 await restoreUser();
