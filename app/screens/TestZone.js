@@ -15,11 +15,7 @@ SplashScreen.hideAsync();
 WebBrowser.maybeCompleteAuthSession();
 // Storage.removeAuthToken();
 
-// Endpoint
-const discovery = {
-    authorizationEndpoint: settings.apiUrl + '/en_GB/oauth2/authorize',
-    tokenEndpoint: settings.apiUrl + '/en_GB/oauth2/token',
-};
+
 
 function TestZone(props) {
     const profileApi = useApi(usersApi.getProfile);
@@ -37,24 +33,24 @@ function TestZone(props) {
 
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: 'add10582a5750ebd2055e1005b65e530',
+            clientId: settings.clientId,
             response_type: 'code',
             scopes: ['basic'],
             usePKCE: true,
             redirectUri: redirectUri,
         },
-        discovery
+        settings.discovery
     );
 
     const getAccessToken = async code => {
         exchangeCodeAsync({
-            clientId: 'add10582a5750ebd2055e1005b65e530',
+            clientId: settings.clientId,
             grant_type: 'authorization_code',
             redirectUri: redirectUri,
             usePKCE: true,
             code: code,
             extraParams: { code_verifier: request.codeVerifier }
-        }, discovery)
+        }, settings.discovery)
             .then(async response => {
                 Storage.storeAuthToken(JSON.stringify(response));
                 setHasToken(true);
