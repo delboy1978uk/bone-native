@@ -11,6 +11,8 @@ import Storage from '../auth/storage';
 import useApi from '../hooks/useApi'
 import usersApi from "../api/users";
 
+WebBrowser.maybeCompleteAuthSession();
+
 function TokenZone(props) {
 
     const [user, setUser] = useState(null);

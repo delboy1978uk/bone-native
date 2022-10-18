@@ -27,8 +27,8 @@ function TestZone(props) {
     }
 
     const redirectUri = makeRedirectUri({
-        scheme: 'bone',
-        path: 'oauth2/callback'
+        scheme: settings.scheme,
+        path: settings.authCallbackURL
     });
 
     const [request, response, promptAsync] = useAuthRequest(
