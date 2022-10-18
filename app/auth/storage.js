@@ -20,7 +20,7 @@ const storeAuthToken = async token => {
 
 const getAuthToken = async () => {
     try {
-        return await SecureStore.getItemAsync(refreshKey);
+        return JSON.parse(await SecureStore.getItemAsync(refreshKey));
     } catch (error) {
         console.error('error getting the refresh token', error);
     }

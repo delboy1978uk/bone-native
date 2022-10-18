@@ -3,28 +3,21 @@ import {makeRedirectUri, useAuthRequest} from "expo-auth-session";
 import client from './client';
 import settings from "../config/settings";
 
-const redirectUri = makeRedirectUri({
-    scheme: settings.scheme,
-    path: settings.authCallbackURL
-});
+const register = (name, email, password) => client.post('/users', {name, email, password});
+const refreshAccessToken = token => {
 
-const [request, response, promptAsync] = useAuthRequest(
-    {
-        clientId: settings.clientId,
-        response_type: 'code',
-        scopes: ['basic'],
-        usePKCE: true,
-        redirectUri: redirectUri,
-    },
-    settings.discovery
-);
+    const formData = new FormData();
+    formData.append('client_id', settings.clientId);
+    formData.append('grant_type', 'refresh_token');
+    formData.append('refresh_token', token);
+    formData.append('scope', 'basic');
 
-const login = (email, password) => {
-
+    return client.axiosInstance.post(settings.apiUrl + settings.discovery.tokenEndpoint, formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+    });
 }
 
-const register = (name, email, password) => client.post('/users', {name, email, password});
-
 export default {
+    refreshAccessToken,
     register,
 };

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import {StyleSheet, View} from "react-native";
 import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest, exchangeCodeAsync } from 'expo-auth-session';
+import { makeRedirectUri, useAuthRequest, exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 
 import Button from '../components/Button';
 import Text from '../components/Text';

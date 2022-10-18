@@ -12,12 +12,15 @@ const apiClient = create({
 
 apiClient.addAsyncRequestTransform(async request => {
     const authToken = await authStorage.getAuthToken();
-    console.log('Xxxx', authToken.accessToken);
+    console.log(request);
     if (!authToken) {
         return;
     }
 
     if (settings.xDebugHeader === true) {
+        if (!request.params) {
+            request.params = [];
+        }
         request.params['XDEBUG_SESSION'] = 'PHPSTORM';
     }
 
