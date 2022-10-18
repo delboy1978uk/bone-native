@@ -13,7 +13,7 @@ import usersApi from "../api/users";
 
 SplashScreen.hideAsync();
 WebBrowser.maybeCompleteAuthSession();
-// Storage.removeToken();
+// Storage.removeAuthToken();
 
 // Endpoint
 const discovery = {
@@ -24,9 +24,9 @@ const discovery = {
 function TestZone(props) {
     const profileApi = useApi(usersApi.getProfile);
     const [hasToken, setHasToken] = useState(false);
+
     const getProfile = async () => {
         const profile = await profileApi.request();
-        console.log(profile);
         console.log(profile.data);
     }
 
@@ -56,12 +56,7 @@ function TestZone(props) {
             extraParams: { code_verifier: request.codeVerifier }
         }, discovery)
             .then(async response => {
-                const accessToken = response.accessToken;
-                const refreshToken = response.accessToken;
-                console.log('ACCESS token', accessToken);
-                console.log('REFRESH token', refreshToken);
-                await Storage.storeToken(accessToken);
-                Storage.storeRefreshToken(refreshToken);
+                Storage.storeAuthToken(JSON.stringify(response));
                 setHasToken(true);
             })
             .catch(error => console.error(error));

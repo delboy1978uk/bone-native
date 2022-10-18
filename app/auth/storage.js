@@ -1,99 +1,37 @@
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
-const key = 'authToken';
-const refreshKey = 'refreshToken';
-const clientId = 'clientId';
-const clientSecret = 'clientSecret';
+const refreshKey = 'authToken';
 
 const getUser = async () => {
-    const token = await getToken();
-
-    return token ? jwtDecode(token) : null;
+    // const token = await getToken();
+    //
+    // return token ? jwtDecode(token) : null;
+    alert('fetch user from storage');
 };
 
-const storeToken = async authToken => {
+const storeAuthToken = async token => {
     try {
-        await SecureStore.setItemAsync(key, authToken);
+        await SecureStore.setItemAsync(refreshKey, token);
     } catch (error) {
-        console.log('error storing the auth token', error);
+        console.error('error storing the refresh token', error);
     }
 };
 
-const getToken = async () => {
-    try {
-        return await SecureStore.getItemAsync(key);
-    } catch (error) {
-        console.log('error getting the auth token', error);
-    }
-};
-
-const removeToken = async () => {
-    try {
-        await SecureStore.deleteItemAsync(key);
-    } catch (error) {
-        console.log('error removing the auth token', error);
-    }
-}
-
-const storeRefreshToken = async refreshToken => {
-    try {
-        await SecureStore.setItemAsync(refreshKey, refreshToken);
-    } catch (error) {
-        console.log('error storing the refresh token', error);
-    }
-};
-
-const getRefreshToken = async () => {
+const getAuthToken = async () => {
     try {
         return await SecureStore.getItemAsync(refreshKey);
     } catch (error) {
-        console.log('error getting the refresh token', error);
+        console.error('error getting the refresh token', error);
     }
 };
 
-const removeRefreshToken = async () => {
+const removeAuthToken = async () => {
     try {
         await SecureStore.deleteItemAsync(refreshKey);
     } catch (error) {
-        console.log('error removing the refresh token', error);
+        console.error('error removing the refresh token', error);
     }
 }
 
-const removeClientCredentials = async () => {
-    try {
-        await SecureStore.deleteItemAsync(clientId);
-        await SecureStore.deleteItemAsync(clientSecret);
-    } catch (error) {
-        console.log('error removing the auth token', error);
-    }
-}
-
-const getClientCredentials = async () => {
-    try {
-        const id = await SecureStore.getItemAsync(clientId);
-        const secret = await SecureStore.getItemAsync(clientSecret);
-
-        if (!id || !secret) {
-            return null;
-        }
-
-        return {
-            client_id: id,
-            client_secret: id,
-        }
-    } catch (error) {
-        console.log('error getting the client credentials', error);
-    }
-}
-
-const storeClientCredentials = async settings => {
-    try {
-        await SecureStore.setItemAsync(clientId, settings.client_id);
-        await SecureStore.setItemAsync(clientSecret, settings.client_secret);
-    } catch (error) {
-        console.log('error storing the client credentials', error);
-    }
-};
-
-export default { getClientCredentials, getRefreshToken, getToken, getUser, removeClientCredentials, removeRefreshToken, removeToken, storeClientCredentials, storeRefreshToken, storeToken };
+export default { getAuthToken, getUser, removeAuthToken,  storeAuthToken };
