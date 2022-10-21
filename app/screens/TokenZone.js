@@ -13,6 +13,7 @@ import useApi from '../hooks/useApi'
 import usersApi from "../api/users";
 
 WebBrowser.maybeCompleteAuthSession();
+// Storage.removeAuthToken();
 
 function TokenZone(props) {
     const {login, user} = useState(null);
@@ -25,7 +26,7 @@ function TokenZone(props) {
         path: settings.authCallbackURL
     });
 
-    const [authRequest, authResponse, promptAsync] = useAuthRequest(
+    const [request, response, promptAsync] = useAuthRequest(
         {
             clientId: settings.clientId,
             response_type: 'code',
@@ -64,12 +65,12 @@ function TokenZone(props) {
         }
         fetchTokenFromStorage();
 
-        if (authResponse?.type === 'success') {
-            const { code } = authResponse.params;
+        if (response?.type === 'success') {
+            const { code } = response.params;
             getAccessToken(code);
         }
 
-    }, [authResponse]);
+    }, [response]);
 
     const beginLogin = () => {
         if (authToken && !isExpired(authToken)) {
@@ -78,7 +79,13 @@ function TokenZone(props) {
             // use refresh token to get access token, if it fails, setUser null and clear storage
             refreshAccessToken(authToken);
         } else {
-            alert('start the login process!');
+            alert('go!');
+            try {
+                promptAsync();
+            } catch (e) {
+                console.error(e)
+            }
+
         }
     }
 

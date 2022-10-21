@@ -11,7 +11,7 @@ const settings = {
             authEndpoint: '/en_GB/oauth2/authorize',
             tokenEndpoint: '/en_GB/oauth2/token',
         },
-        scheme: 'bone',
+        // scheme: 'bone',
         xDebugHeader: true,
     },
     staging: {
