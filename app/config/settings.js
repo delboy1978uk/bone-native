@@ -8,8 +8,8 @@ const settings = {
         authCallbackURL: 'oauth2/callback',
         clientId: 'add10582a5750ebd2055e1005b65e530',
         discovery: {
-            authEndpoint: '/en_GB/oauth2/authorize',
-            tokenEndpoint: '/en_GB/oauth2/token',
+            authEndpoint: 'https://awesome.scot/en_GB/oauth2/authorize',
+            tokenEndpoint: 'https://awesome.scot/en_GB/oauth2/token',
         },
         // scheme: 'bone',
         xDebugHeader: true,

@@ -37,7 +37,7 @@ function TestZone(props) {
 
     const [request, response, promptAsync] = useAuthRequest(
         {
-            clientId: 'add10582a5750ebd2055e1005b65e530',
+            clientId: settings.clientId,
             response_type: 'code',
             scopes: ['basic'],
             usePKCE: true,
@@ -48,7 +48,7 @@ function TestZone(props) {
 
     const getAccessToken = async code => {
         exchangeCodeAsync({
-            clientId: 'add10582a5750ebd2055e1005b65e530',
+            clientId: settings.clientId,
             grant_type: 'authorization_code',
             redirectUri: redirectUri,
             usePKCE: true,
