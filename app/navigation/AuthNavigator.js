@@ -1,7 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 
-import LoginScreen from "../screens/LoginScreen";
+// import LoginScreen from "../screens/LoginScreen";
+import TokenZone from "../screens/TokenZone";
 import RegisterScreen from "../screens/RegisterScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 
@@ -12,7 +13,7 @@ function AuthNavigator(props) {
         <Stack.Navigator
             initialRouteName={'Welcome'}
         >
-            <Stack.Screen name={'Login'} component={LoginScreen} />
+            <Stack.Screen name={'Login'} component={TokenZone} />
             <Stack.Screen name={'Register'} component={RegisterScreen} />
             <Stack.Screen name={'Welcome'} component={WelcomeScreen} options={{headerShown: false}}/>
         </Stack.Navigator>

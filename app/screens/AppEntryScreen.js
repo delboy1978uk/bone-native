@@ -36,34 +36,11 @@ export default function AppEntryScreen() {
         }
     };
 
-    const initClient = async () => {
-        const credentials = await authStorage.getClientCredentials();
-
-        if (!credentials) {
-            const response = await RegistrationClient.getRegistrationClientToken();
-
-            if (response.ok) {
-                const token = response.data.access_token;
-                const registerResponse = await RegistrationClient.registerDevice(token);
-
-                if (registerResponse.ok) {
-                    const client = registerResponse.data;
-                    authStorage.storeClientCredentials(client);
-                }
-            } else {
-                logger.log(response.problem);
-            }
-        } else {
-            console.log('we have credentials!', credentials);
-        }
-    };
-
     useEffect(() => {
         // authStorage.removeClientCredentials();
         async function prepare() {
             try {
                 await restoreUser();
-                await initClient();
             } catch (e) {
                 console.warn(e);
             } finally {

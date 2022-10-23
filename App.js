@@ -9,8 +9,8 @@ import TokenZone from './app/screens/TokenZone';
 export default function App() {
     return (
         <Screen style={{height: '100%'}}>
-            {/*<AppEntryScreen />*/}
-            <TokenZone />
+            <AppEntryScreen />
+            {/*<TokenZone />*/}
             {/*<TestZone />*/}
         </Screen>
     )

@@ -3,15 +3,20 @@ import jwtDecode from "jwt-decode";
 
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
+import useApi from "./useApi";
+import usersApi from "../api/users";
 
 export default useAuth = () => {
+    const profileApi = useApi(usersApi.getProfile);
     const {user, setUser} = useContext(AuthContext);
 
-    const login = authToken => {
-        console.log('Logging in!! token = ', authToken);
-        const user = jwtDecode(authToken);
+    const login = async authToken => {
+        authStorage.storeAuthToken(authToken);
+        const user = await profileApi.request();
         setUser(user);
-        authStorage.storeToken(authToken);
+        const profile = await profileApi.request();
+        console.log(profile.data);
+        authStorage.storeUser(authToken);
     }
 
     const logout = () => {

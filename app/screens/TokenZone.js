@@ -10,6 +10,7 @@ import settings from "../config/settings";
 import Storage from '../auth/storage';
 import Text from '../components/Text';
 import useApi from '../hooks/useApi'
+import useAuth from '../hooks/useAuth'
 import usersApi from "../api/users";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -24,10 +25,9 @@ const discovery = {
 };;
 
 function TokenZone(props) {
-    const [user, setUser] = useState(null);
+    const {login, user} = useAuth();
     const [loginFailed, setLoginFailed] = useState(false);
     const [authToken, setAuthToken] = useState(null);
-    const profileApi = useApi(usersApi.getProfile);
 
     const redirectUri = makeRedirectUri({
         scheme: settings.scheme,
@@ -56,19 +56,10 @@ function TokenZone(props) {
         }, discovery)
             .then(async response => {
                 console.log('storing access token');
-                Storage.storeAuthToken(response);
-                setAuthToken(true);
-                const user = await getProfile();
-                setUser(user);
+                login(response);
             })
             .catch(error => console.error(error));
 
-    }
-
-    const getProfile = async () => {
-        console.log('fetching profile from api')
-        const profile = await profileApi.request();
-        console.log(profile.data);
     }
 
     useEffect(() => {

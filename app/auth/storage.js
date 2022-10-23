@@ -1,36 +1,50 @@
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
-const refreshKey = 'authToken';
+const userKey = 'user';
+const tokenKey = 'authToken';
 
 const getUser = async () => {
-    // const token = await getToken();
-    //
-    // return token ? jwtDecode(token) : null;
-    alert('fetch user from storage');
+    return await fetch(userKey);
 };
 
-const storeAuthToken = async token => {
-    try {
-        await SecureStore.setItemAsync(refreshKey, JSON.stringify(token));
-    } catch (error) {
-        console.error('error storing the refresh token', error);
-    }
+const storeUser = user => {
+    store(userKey, user, 'error storing the user');
+};
+
+const storeAuthToken = token => {
+    store(tokenKey, token, 'error storing the auth token');
 };
 
 const getAuthToken = async () => {
-    try {
-        return JSON.parse(await SecureStore.getItemAsync(refreshKey));
-    } catch (error) {
-        console.error('error getting the refresh token', error);
-    }
+    return await fetch(tokenKey);
 };
 
-const removeAuthToken = async () => {
+const removeAuthToken = () => {
+    remove(tokenKey);
+}
+
+const remove = async key => {
     try {
-        await SecureStore.deleteItemAsync(refreshKey);
+        await SecureStore.deleteItemAsync(key);
     } catch (error) {
-        console.error('error removing the refresh token', error);
+        console.error('error removing ' + key + ' from storage', error);
+    }
+}
+
+const store = (key, value, errorMessage = 'error storing value') => {
+    try {
+        SecureStore.setItemAsync(key, JSON.stringify(value));
+    } catch (error) {
+        console.error(errorMessage, error);
+    }
+}
+
+const fetch = async key => {
+    try {
+        return JSON.parse(await SecureStore.getItemAsync(key));
+    } catch (error) {
+        console.error('error fetcghing storage key ' + key, error);
     }
 }
 

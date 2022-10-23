@@ -17,15 +17,15 @@ function LoginScreen(props) {
     const [loginFailed, setLoginFailed] = useState(false);
 
     const handleSubmit = async ({email, password}) => {
-        const clientSettings = await authStorage.getClientCredentials();
-        const result = await authApi.login(email, password, clientSettings);
-        console.log(result);
-        if (!result.ok) {
-            return setLoginFailed(true);
-        }
-
-        setLoginFailed(false);
-        login(result.data);
+        // const clientSettings = await authStorage.getClientCredentials();
+        // const result = await authApi.login(email, password, clientSettings);
+        // console.log(result);
+        // if (!result.ok) {
+        //     return setLoginFailed(true);
+        // }
+        //
+        // setLoginFailed(false);
+        // login(result.data);
     };
 
     return (
