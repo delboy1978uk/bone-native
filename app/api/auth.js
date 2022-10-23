@@ -1,20 +1,23 @@
-import client from './client';
+import {makeRedirectUri, useAuthRequest} from "expo-auth-session";
 
-const login = (email, password, clientSettings) => client.post('/oauth2/authorize', {
-    response_type: 'code',
-    client_id: clientSettings.client_id,
-    client_secret: clientSettings.client_secret,
-    redirect_uri: 'bone://outh2/redirect',
-    state: 'code',
-    scope: 'basic',
-    code_challenge: 'xxxx',
-    email: email,
-    password: password
-});
+import client from './client';
+import settings from "../config/settings";
 
 const register = (name, email, password) => client.post('/users', {name, email, password});
+const refreshAccessToken = token => {
+
+    const formData = new FormData();
+    formData.append('client_id', settings.clientId);
+    formData.append('grant_type', 'refresh_token');
+    formData.append('refresh_token', token);
+    formData.append('scope', 'basic');
+
+    return client.axiosInstance.post(settings.apiUrl + settings.discovery.tokenEndpoint, formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+    });
+}
 
 export default {
-    login,
+    refreshAccessToken,
     register,
 };

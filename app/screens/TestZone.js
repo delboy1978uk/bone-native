@@ -35,14 +35,16 @@ function TestZone(props) {
         path: 'oauth2/callback'
     });
 
+    const config = {
+        clientId: settings.clientId,
+        response_type: 'code',
+        scopes: ['basic'],
+        usePKCE: true,
+        redirectUri: redirectUri,
+    }
+
     const [request, response, promptAsync] = useAuthRequest(
-        {
-            clientId: settings.clientId,
-            response_type: 'code',
-            scopes: ['basic'],
-            usePKCE: true,
-            redirectUri: redirectUri,
-        },
+        config,
         discovery
     );
 
