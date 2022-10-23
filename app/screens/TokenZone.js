@@ -13,6 +13,8 @@ import useApi from '../hooks/useApi'
 import usersApi from "../api/users";
 
 WebBrowser.maybeCompleteAuthSession();
+Date.prototype.getUnixTime = () => { return this.getTime()/1000|0 };
+
 // Storage.removeAuthToken();
 
 // Endpoint
@@ -22,10 +24,9 @@ const discovery = {
 };;
 
 function TokenZone(props) {
-    const {login, user} = useState(null);
+    const [user, setUser] = useState(null);
     const [loginFailed, setLoginFailed] = useState(false);
     const [authToken, setAuthToken] = useState(null);
-    const refreshApi = useApi(authApi.refreshAccessToken);
     const profileApi = useApi(usersApi.getProfile);
 
     const redirectUri = makeRedirectUri({
@@ -57,7 +58,8 @@ function TokenZone(props) {
                 console.log('storing access token');
                 Storage.storeAuthToken(response);
                 setAuthToken(true);
-                const profile = await getProfile();
+                const user = await getProfile();
+                setUser(user);
             })
             .catch(error => console.error(error));
 
@@ -69,13 +71,7 @@ function TokenZone(props) {
         console.log(profile.data);
     }
 
-    const refreshAccessToken = () => {
-        console.log('refreshing access token');
-        refreshApi.request(authToken.refreshToken).then(console.log).catch(e => console.error(e));
-    }
-
     useEffect(() => {
-        console.log('fetching token from storage');
         const fetchTokenFromStorage = async () => {
             const token = await Storage.getAuthToken();
             setAuthToken(token);
@@ -83,7 +79,6 @@ function TokenZone(props) {
         fetchTokenFromStorage();
 
         if (response?.type === 'success') {
-            console.log('fetching access token')
             const { code } = response.params;
             getAccessToken(code);
         }
@@ -91,31 +86,11 @@ function TokenZone(props) {
     }, [response]);
 
     const beginLogin = () => {
-        if (authToken && !isExpired(authToken)) {
-            alert('grab user profile, setUser');
-        } else if (authToken && isExpired(authToken)) {
-            // use refresh token to get access token, if it fails, setUser null and clear storage
-            console.log('auth token expired, trying to refresh');
-            refreshAccessToken(authToken);
-        } else {
-            console.log('beginng authorize call..');
-            try {
-                promptAsync();
-            } catch (e) {
-                console.error(e);
-            }
-
+        try {
+            promptAsync();
+        } catch (e) {
+            console.error(e);
         }
-    }
-
-    const isExpired = authToken => {
-        console.log('checking token has expired');
-        console.log(authToken);
-        const issuedAt = authToken.issuedAt;
-        const expiresIn = authToken.expiresIn;
-        const expiryTime = issuedAt + expiresIn;
-        console.log(issuedAt, expiresIn, expiryTime);
-        return true;
     }
 
     return (
@@ -132,7 +107,7 @@ function TokenZone(props) {
                 </View>
             }
             {user && <>
-                <Text>Welcome, user</Text>
+                <Text>Welcome, { user.firstname }</Text>
                 <Button
                     title="Try calling API"
                     onPress={() => getProfile()}
