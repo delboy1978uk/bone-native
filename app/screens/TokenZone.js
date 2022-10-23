@@ -78,7 +78,6 @@ function TokenZone(props) {
         console.log('fetching token from storage');
         const fetchTokenFromStorage = async () => {
             const token = await Storage.getAuthToken();
-            console.log(token);
             setAuthToken(token);
         }
         fetchTokenFromStorage();
@@ -96,14 +95,14 @@ function TokenZone(props) {
             alert('grab user profile, setUser');
         } else if (authToken && isExpired(authToken)) {
             // use refresh token to get access token, if it fails, setUser null and clear storage
-            alert('auth token expired, trying to refresh');
+            console.log('auth token expired, trying to refresh');
             refreshAccessToken(authToken);
         } else {
             console.log('beginng authorize call..');
             try {
                 promptAsync();
             } catch (e) {
-                console.error(e)
+                console.error(e);
             }
 
         }
@@ -112,6 +111,10 @@ function TokenZone(props) {
     const isExpired = authToken => {
         console.log('checking token has expired');
         console.log(authToken);
+        const issuedAt = authToken.issuedAt;
+        const expiresIn = authToken.expiresIn;
+        const expiryTime = issuedAt + expiresIn;
+        console.log(issuedAt, expiresIn, expiryTime);
         return true;
     }
 
