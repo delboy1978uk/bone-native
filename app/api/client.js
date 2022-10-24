@@ -29,7 +29,7 @@ apiClient.addAsyncRequestTransform(async request => {
 });
 
 apiClient.addAsyncResponseTransform(async response => {
-    console.log('logging response');
+    console.log('logging response headers');
     console.log(response);
 
     if (response.ok) {
@@ -37,30 +37,30 @@ apiClient.addAsyncResponseTransform(async response => {
     }
 
     if (response.problem) {
-        console.log('api call failed', err);
-        const originalConfig = err.config;
+        console.log('api call failed', response);
+        const originalConfig = {};//err.config;
 
-        if (originalConfig.url !== "/auth/signin" && err.response) {
-            // Access Token was expired
-            if (err.response.status === 401 && !originalConfig._retry) {
-                originalConfig._retry = true;
+        // if (originalConfig.url !== "/auth/signin" ){ //&& err.response) {
+        //     // Access Token was expired
+        //     if (response.status === 401 && !originalConfig._retry) {
+        //         originalConfig._retry = true;
+        //
+        //         try {
+        //             const rs = await instance.post("/auth/refreshtoken", {
+        //                 refreshToken: TokenService.getLocalRefreshToken(),
+        //             });
+        //
+        //             const { accessToken } = rs.data;
+        //             TokenService.updateLocalAccessToken(accessToken);
+        //
+        //             return instance(originalConfig);
+        //         } catch (_error) {
+        //             return Promise.reject(_error);
+        //         }
+        //     }
+        // }
 
-                try {
-                    const rs = await instance.post("/auth/refreshtoken", {
-                        refreshToken: TokenService.getLocalRefreshToken(),
-                    });
-
-                    const { accessToken } = rs.data;
-                    TokenService.updateLocalAccessToken(accessToken);
-
-                    return instance(originalConfig);
-                } catch (_error) {
-                    return Promise.reject(_error);
-                }
-            }
-        }
-
-        return Promise.reject(err);
+        return Promise.reject(response.problem);
     }
 });
 

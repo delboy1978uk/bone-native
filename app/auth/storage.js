@@ -48,4 +48,4 @@ const fetch = async key => {
     }
 }
 
-export default { getAuthToken, getUser, removeAuthToken,  storeAuthToken };
+export default { getAuthToken, getUser, removeAuthToken,  storeAuthToken, storeUser };
