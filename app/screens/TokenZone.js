@@ -55,7 +55,6 @@ function TokenZone(props) {
             extraParams: { code_verifier: request.codeVerifier }
         }, discovery)
             .then(async response => {
-                console.log('storing access token');
                 login(response);
             })
             .catch(error => console.error(error));

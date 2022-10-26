@@ -37,28 +37,29 @@ apiClient.addAsyncResponseTransform(async response => {
     }
 
     if (response.problem) {
-        console.log('api call failed', response);
-        const originalConfig = {};//err.config;
+        const originalConfig = response.config;
 
-        // if (originalConfig.url !== "/auth/signin" ){ //&& err.response) {
-        //     // Access Token was expired
-        //     if (response.status === 401 && !originalConfig._retry) {
-        //         originalConfig._retry = true;
-        //
-        //         try {
-        //             const rs = await instance.post("/auth/refreshtoken", {
-        //                 refreshToken: TokenService.getLocalRefreshToken(),
-        //             });
-        //
-        //             const { accessToken } = rs.data;
-        //             TokenService.updateLocalAccessToken(accessToken);
-        //
-        //             return instance(originalConfig);
-        //         } catch (_error) {
-        //             return Promise.reject(_error);
-        //         }
-        //     }
-        // }
+        if (originalConfig.url !== settings.discovery.authEndpoint ){
+            // Access Token was expired
+            if (response.status === 401 && !originalConfig._retry) {
+                console.log('we got 401\'ed');
+                originalConfig._retry = true;
+
+                try {
+                    const token = await Storage.getAuthToken();
+                    const rs = await apiClient.post(settings.discovery.tokenEndpoint, {
+                        refreshToken: token.refreshToken
+                    });
+
+                    const { accessToken } = rs.data;
+                    authStorage.storeAuthToken(accessToken);
+                    console.log('XXXX')
+                    return create(originalConfig);
+                } catch (_error) {
+                    return Promise.reject(_error);
+                }
+            }
+        }
 
         return Promise.reject(response.problem);
     }

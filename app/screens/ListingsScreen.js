@@ -15,6 +15,7 @@ import useApi from '../hooks/useApi'
 function ListingsScreen({navigation}) {
 
     const getListingsApi = useApi(listingsApi.getListings);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         getListingsApi.request();
@@ -33,14 +34,17 @@ function ListingsScreen({navigation}) {
             <FlatList
                 data={getListingsApi.data}
                 keyExtractor={listing => listing.id}
-                renderItem={ ({item}) =>
-                    <Card
+                onRefresh={() => getListingsApi.request()}
+                refreshing={refreshing}
+                renderItem={ ({item}) => {
+                    return <Card
                         title={item.title}
                         subtitle={"€" + item.price}
                         imageUrl={item.images[0].url}
                         thumbnailUrl={item.images[0].thumbnailUrl}
                         onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
                     />
+                }
                 }
             />
         </Screen>

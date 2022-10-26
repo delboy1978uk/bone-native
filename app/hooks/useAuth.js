@@ -14,8 +14,6 @@ export default useAuth = () => {
         authStorage.storeAuthToken(authToken);
         const user = await profileApi.request();
         setUser(user);
-        const profile = await profileApi.request();
-        authStorage.storeUser(authToken);
     }
 
     const logout = () => {
