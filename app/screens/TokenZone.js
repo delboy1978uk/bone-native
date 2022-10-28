@@ -46,6 +46,7 @@ function TokenZone(props) {
     );
 
     const getAccessToken = async code => {
+        console.log('we gotr a code', code)
         exchangeCodeAsync({
             clientId: settings.clientId,
             grant_type: 'authorization_code',
@@ -55,9 +56,10 @@ function TokenZone(props) {
             extraParams: { code_verifier: request.codeVerifier }
         }, discovery)
             .then(async response => {
-                login(response);
+                // login(response);
+                console.log('logged in!');
             })
-            .catch(error => console.error(error));
+            .catch(error => console.error('urgh', error));
 
     }
 

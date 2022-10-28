@@ -11,6 +11,7 @@ export default useAuth = () => {
     const {user, setUser} = useContext(AuthContext);
 
     const login = async authToken => {
+        console.log(authToken);
         authStorage.storeAuthToken(authToken);
         const user = await profileApi.request();
         setUser(user);

@@ -29,8 +29,6 @@ apiClient.addAsyncRequestTransform(async request => {
 });
 
 apiClient.addAsyncResponseTransform(async response => {
-    console.log('logging response headers');
-    console.log(response);
 
     if (response.ok) {
         return response.data;
@@ -39,22 +37,25 @@ apiClient.addAsyncResponseTransform(async response => {
     if (response.problem) {
         const originalConfig = response.config;
 
-        if (originalConfig.url !== settings.discovery.authEndpoint ){
-            // Access Token was expired
+        if (originalConfig.url !== settings.discovery.authEndpoint){
+            //Access Token was expired
             if (response.status === 401 && !originalConfig._retry) {
-                console.log('we got 401\'ed');
+                console.log('we got 401\'ed', originalConfig.url);
                 originalConfig._retry = true;
 
                 try {
                     const token = await Storage.getAuthToken();
-                    const rs = await apiClient.post(settings.discovery.tokenEndpoint, {
-                        refreshToken: token.refreshToken
-                    });
+                    if (token) {
+                        const rs = await apiClient.post(settings.discovery.tokenEndpoint, {
+                            refreshToken: token.refreshToken,
+                        });
 
-                    const { accessToken } = rs.data;
-                    authStorage.storeAuthToken(accessToken);
-                    console.log('XXXX')
-                    return create(originalConfig);
+                        const { accessToken } = rs.data;
+                        // authStorage.storeAuthToken(accessToken);
+                        console.log('refresh token called', rs.data)
+                        return create(originalConfig);
+                    }
+                    return Promise.reject('user is logged out');
                 } catch (_error) {
                     return Promise.reject(_error);
                 }
