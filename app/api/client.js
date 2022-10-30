@@ -1,4 +1,5 @@
 import {create} from 'apisauce';
+import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 import cache from '../utility/cache';
 import authStorage from '../auth/storage';
@@ -28,6 +29,29 @@ apiClient.addAsyncRequestTransform(async request => {
     request.headers['Authorization']  = 'Bearer ' + authToken.accessToken;
 });
 
+// const refreshAuthLogic = failedRequest => {
+//     Storage.getAuthToken()
+//         .then(token => {
+//             if (token) {
+//                 return refreshToken(token.refreshToken);
+//             }
+//
+//             return Promise.reject('user is logged out');
+//         })
+//         .then(response => {
+//             const newToken = {
+//                 accessToken: response.data.access_token,
+//                 expiresIn: response.data.expires_in,
+//                 refreshToken: response.data.refresh_token,
+//                 tokenType: response.data.token_type,
+//             };
+//             authStorage.storeAuthToken(newToken);
+//             failedRequest.response.config.headers['Authorization'] = 'Bearer ' + newToken.accessToken;
+//
+//             return Promise.resolve();
+//         });
+// }
+
 const refreshToken = async token => {
     const formData = new FormData();
     formData.append('client_id', settings.clientId);
@@ -39,6 +63,8 @@ const refreshToken = async token => {
         headers: {'Content-Type': 'multipart/form-data'}
     }).catch(error => console.error(error));
 }
+
+// createAuthRefreshInterceptor(apiClient.axiosInstance, refreshAuthLogic);
 
 apiClient.addAsyncResponseTransform(async response => {
 
@@ -53,12 +79,10 @@ apiClient.addAsyncResponseTransform(async response => {
             //Access Token was expired
             if (response.status === 401 && !originalConfig.retry) {
                 originalConfig.retry = true;
-                console.log(originalConfig)
+                console.log('config', originalConfig)
                 try {
                     const token = await Storage.getAuthToken();
                     if (token) {
-                        console.log('current', token)
-                        console.log('trying to refresh token');
                         const rs = await refreshToken(token.refreshToken);
                         const newToken = {
                             accessToken: rs.data.access_token,
@@ -67,7 +91,7 @@ apiClient.addAsyncResponseTransform(async response => {
                             tokenType: rs.data.token_type,
                         };
                         authStorage.storeAuthToken(newToken);
-                        return apiClient(originalConfig);
+                        return apiClient.any(originalConfig);
                     }
                     return Promise.reject('user is logged out');
                 } catch (_error) {
@@ -98,17 +122,17 @@ apiClient.get = async (url, params, axiosConfig) => {
     return data ? {ok: true, data: data} : response;
 }
 
-const refreshAccessToken = () => {
-    console.log('refreshing access token');
-    refreshApi.request(authToken.refreshToken)
-        .then(token => {
-            console.log('new token', token);
-            Storage.storeAuthToken(token);
-            setAuthToken(token);
-        })
-        .catch(e => {
-            console.error('error refreshing token', e);
-        });
-}
+// const refreshAccessToken = () => {
+//     console.log('refreshing access token');
+//     refreshApi.request(authToken.refreshToken)
+//         .then(token => {
+//             console.log('new token', token);
+//             Storage.storeAuthToken(token);
+//             setAuthToken(token);
+//         })
+//         .catch(e => {
+//             console.error('error refreshing token', e);
+//         });
+// }
 
 export default apiClient;
