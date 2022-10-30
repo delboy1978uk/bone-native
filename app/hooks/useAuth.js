@@ -11,7 +11,6 @@ export default useAuth = () => {
     const {user, setUser} = useContext(AuthContext);
 
     const login = async authToken => {
-        console.log(authToken);
         authStorage.storeAuthToken(authToken);
         const user = await profileApi.request();
         setUser(user);
@@ -20,6 +19,7 @@ export default useAuth = () => {
     const logout = () => {
         setUser(null);
         authStorage.removeAuthToken();
+        authStorage.removeUser();
     }
 
     return {login, logout, user};

@@ -46,8 +46,7 @@ function TokenZone(props) {
     );
 
     const getAccessToken = async code => {
-        console.log('we gotr a code', code)
-        exchangeCodeAsync({
+        await exchangeCodeAsync({
             clientId: settings.clientId,
             grant_type: 'authorization_code',
             redirectUri: redirectUri,
@@ -55,12 +54,10 @@ function TokenZone(props) {
             code: code,
             extraParams: { code_verifier: request.codeVerifier }
         }, discovery)
-            .then(async response => {
-                // login(response);
-                console.log('logged in!');
+            .then(response => {
+                login(response);
             })
             .catch(error => console.error('urgh', error));
-
     }
 
     useEffect(() => {

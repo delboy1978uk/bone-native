@@ -24,6 +24,10 @@ const removeAuthToken = () => {
     remove(tokenKey);
 }
 
+const removeUser = () => {
+    remove(userKey);
+}
+
 const remove = async key => {
     try {
         await SecureStore.deleteItemAsync(key);
@@ -48,4 +52,4 @@ const fetch = async key => {
     }
 }
 
-export default { getAuthToken, getUser, removeAuthToken,  storeAuthToken, storeUser };
+export default { getAuthToken, getUser, removeAuthToken, removeUser, storeAuthToken, storeUser };

@@ -28,6 +28,18 @@ apiClient.addAsyncRequestTransform(async request => {
     request.headers['Authorization']  = 'Bearer ' + authToken.accessToken;
 });
 
+const refreshToken = async token => {
+    const formData = new FormData();
+    formData.append('client_id', settings.clientId);
+    formData.append('grant_type', 'refresh_token');
+    formData.append('refresh_token', token);
+    formData.append('scope', 'basic');
+
+    return await apiClient.axiosInstance.post(settings.discovery.tokenEndpoint, formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+    }).catch(error => console.error(error));
+}
+
 apiClient.addAsyncResponseTransform(async response => {
 
     if (response.ok) {
@@ -39,21 +51,23 @@ apiClient.addAsyncResponseTransform(async response => {
 
         if (originalConfig.url !== settings.discovery.authEndpoint){
             //Access Token was expired
-            if (response.status === 401 && !originalConfig._retry) {
-                console.log('we got 401\'ed', originalConfig.url);
-                originalConfig._retry = true;
-
+            if (response.status === 401 && !originalConfig.retry) {
+                originalConfig.retry = true;
+                console.log(originalConfig)
                 try {
                     const token = await Storage.getAuthToken();
                     if (token) {
-                        const rs = await apiClient.post(settings.discovery.tokenEndpoint, {
-                            refreshToken: token.refreshToken,
-                        });
-
-                        const { accessToken } = rs.data;
-                        // authStorage.storeAuthToken(accessToken);
-                        console.log('refresh token called', rs.data)
-                        return create(originalConfig);
+                        console.log('current', token)
+                        console.log('trying to refresh token');
+                        const rs = await refreshToken(token.refreshToken);
+                        const newToken = {
+                            accessToken: rs.data.access_token,
+                            expiresIn: rs.data.expires_in,
+                            refreshToken: rs.data.refresh_token,
+                            tokenType: rs.data.token_type,
+                        };
+                        authStorage.storeAuthToken(newToken);
+                        return apiClient(originalConfig);
                     }
                     return Promise.reject('user is logged out');
                 } catch (_error) {

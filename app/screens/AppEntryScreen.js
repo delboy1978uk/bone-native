@@ -40,10 +40,13 @@ export default function AppEntryScreen() {
         // authStorage.removeClientCredentials();
         async function prepare() {
             try {
+                console.log('trying to restore user')
                 await restoreUser();
+                console.log(user);
             } catch (e) {
-                console.warn(e);
+                console.error('problam restoring user from storage');
             } finally {
+                console.log('hiding splash screen')
                 setIsReady(true);
             }
         }
