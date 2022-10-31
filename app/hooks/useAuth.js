@@ -13,7 +13,8 @@ export default useAuth = () => {
     const login = async authToken => {
         authStorage.storeAuthToken(authToken);
         const user = await profileApi.request();
-        setUser(user);
+        authStorage.storeUser(user.data);
+        setUser(user.data);
     }
 
     const logout = () => {

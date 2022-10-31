@@ -22,8 +22,6 @@ function AppNavigator(props) {
     useNotifications();
     const {token, setToken} = useState(null);
 
-
-
     return (
         <Tab.Navigator
             screenOptions={{
