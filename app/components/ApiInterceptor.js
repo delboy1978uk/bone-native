@@ -54,7 +54,7 @@ function ApiInterceptor(props) {
                     originalConfig.retry = true;
                     try {
                         const token = await authStorage.getAuthToken();
-                        
+
                         if (token) {
                             const rs = await refreshToken(token.refreshToken);
                             const newToken = {
