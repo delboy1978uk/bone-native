@@ -1,5 +1,4 @@
 import {create} from 'apisauce';
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 import cache from '../utility/cache';
 import authStorage from '../auth/storage';
@@ -10,7 +9,6 @@ import Storage from "../auth/storage";
 const apiClient = create({
     baseURL: settings.apiUrl
 });
-
 
 apiClient.addAsyncRequestTransform(async request => {
     const authToken = await authStorage.getAuthToken();
@@ -29,28 +27,6 @@ apiClient.addAsyncRequestTransform(async request => {
     request.headers['Authorization']  = 'Bearer ' + authToken.accessToken;
 });
 
-// const refreshAuthLogic = failedRequest => {
-//     Storage.getAuthToken()
-//         .then(token => {
-//             if (token) {
-//                 return refreshToken(token.refreshToken);
-//             }
-//
-//             return Promise.reject('user is logged out');
-//         })
-//         .then(response => {
-//             const newToken = {
-//                 accessToken: response.data.access_token,
-//                 expiresIn: response.data.expires_in,
-//                 refreshToken: response.data.refresh_token,
-//                 tokenType: response.data.token_type,
-//             };
-//             authStorage.storeAuthToken(newToken);
-//             failedRequest.response.config.headers['Authorization'] = 'Bearer ' + newToken.accessToken;
-//
-//             return Promise.resolve();
-//         });
-// }
 
 const refreshToken = async token => {
     const formData = new FormData();
@@ -59,12 +35,10 @@ const refreshToken = async token => {
     formData.append('refresh_token', token);
     formData.append('scope', 'basic');
 
-    return await apiClient.axiosInstance.post(settings.discovery.tokenEndpoint, formData, {
+    return await apiClient.post(settings.discovery.tokenEndpoint, formData, {
         headers: {'Content-Type': 'multipart/form-data'}
-    }).catch(error => console.error(error));
+    }).catch(error => Promise.reject(error));
 }
-
-// createAuthRefreshInterceptor(apiClient.axiosInstance, refreshAuthLogic);
 
 apiClient.addAsyncResponseTransform(async response => {
 
@@ -75,30 +49,29 @@ apiClient.addAsyncResponseTransform(async response => {
     if (response.problem) {
         const originalConfig = response.config;
 
-        if (originalConfig.url !== settings.discovery.authEndpoint){
-            //Access Token was expired
-            if (response.status === 401 && !originalConfig.retry) {
-                originalConfig.retry = true;
-                console.log('config', originalConfig)
-                try {
-                    const token = await Storage.getAuthToken();
-                    if (token) {
-                        const rs = await refreshToken(token.refreshToken);
-                        const newToken = {
-                            accessToken: rs.data.access_token,
-                            expiresIn: rs.data.expires_in,
-                            refreshToken: rs.data.refresh_token,
-                            tokenType: rs.data.token_type,
-                        };
-                        authStorage.storeAuthToken(newToken);
-                        return apiClient.any(originalConfig);
-                    }
-                    return Promise.reject('user is logged out');
-                } catch (_error) {
-                    return Promise.reject(_error);
+        //Access Token was expired
+        if (originalConfig.url !== settings.discovery.authEndpoint && response.status === 401 && !originalConfig.retry) {
+            originalConfig.retry = true;
+            try {
+                const token = await Storage.getAuthToken();
+                if (token) {
+                    const rs = await refreshToken(token.refreshToken);
+                    const newToken = {
+                        accessToken: rs.data.access_token,
+                        expiresIn: rs.data.expires_in,
+                        refreshToken: rs.data.refresh_token,
+                        tokenType: rs.data.token_type,
+                    };
+                    authStorage.storeAuthToken(newToken);
+
+                    return apiClient.any(originalConfig);
                 }
+                return Promise.reject('Log out user, no valid token issued');
+            } catch (_error) {
+                return Promise.reject(_error);
             }
         }
+
 
         return Promise.reject(response.problem);
     }
@@ -121,18 +94,5 @@ apiClient.get = async (url, params, axiosConfig) => {
 
     return data ? {ok: true, data: data} : response;
 }
-
-// const refreshAccessToken = () => {
-//     console.log('refreshing access token');
-//     refreshApi.request(authToken.refreshToken)
-//         .then(token => {
-//             console.log('new token', token);
-//             Storage.storeAuthToken(token);
-//             setAuthToken(token);
-//         })
-//         .catch(e => {
-//             console.error('error refreshing token', e);
-//         });
-// }
 
 export default apiClient;
