@@ -13,8 +13,6 @@ import * as WebBrowser from "expo-web-browser";
 WebBrowser.maybeCompleteAuthSession();
 Date.prototype.getUnixTime = () => { return this.getTime()/1000|0 };
 
-// Storage.removeAuthToken();
-
 // Endpoint
 const discovery = {
     authorizationEndpoint: settings.apiUrl + '/en_GB/oauth2/authorize',
@@ -59,12 +57,6 @@ function WelcomeScreen(props) {
     }
 
     useEffect(() => {
-        const fetchTokenFromStorage = async () => {
-            const token = await Storage.getAuthToken();
-            setAuthToken(token);
-        }
-        fetchTokenFromStorage();
-
         if (response?.type === 'success') {
             const { code } = response.params;
             getAccessToken(code);

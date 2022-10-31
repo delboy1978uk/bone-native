@@ -29,13 +29,16 @@ export default function AppEntryScreen() {
 
     const [user, setUser] = useState();
     const [isReady, setIsReady] = useState(false);
-    const [token, setToken] = useState(false);
 
     const restoreUser = async () => {
-        const user = await authStorage.getUser();
+        const authToken = await authStorage.getAuthToken();
 
-        if (user) {
-            setUser(user);
+        if (authToken) {
+            const user = await authStorage.getUser();
+
+            if (user) {
+                setUser(user);
+            }
         }
     };
 
