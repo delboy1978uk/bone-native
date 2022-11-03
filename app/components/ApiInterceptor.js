@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import apiClient from "../api/client";
 import authStorage from "../auth/storage";
@@ -59,10 +59,8 @@ function ApiInterceptor(props) {
             // check for a 401 response (expired access token), use refresh token to fetch new access token, retry request
             apiClient.addAsyncResponseTransform(async response => {
                 if (response.ok) {
-                    console.log('ok', response.config.url);
                     return response.data;
                 }
-                console.log('not ok', response.config.url);
 
                 if (response.problem) {
                     const originalConfig = response.config;
