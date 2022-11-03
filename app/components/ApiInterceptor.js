@@ -67,15 +67,20 @@ function ApiInterceptor(props) {
 
                     //Access Token was expired, grab a fresh one using the refresh token and try again
                     if (originalConfig.url !== settings.discovery.authEndpoint && response.status === 401 && !originalConfig.retry) {
+                        // settimng retry flag to allow retrying once and not loop infinitely
                         originalConfig.retry = true;
                         try {
                             const token = await authStorage.getAuthToken();
                             if (token) {
+                                // first request to refresh will call the method, all the other requests will await the promise
+                                // so only one call to refresh will be made in the case of multile async 401s
                                 refreshing = refreshing ? refreshing : refreshToken(token.refreshToken);
                                 await refreshing;
                                 refreshing = null;
 
                                 return apiClient.any(originalConfig);
+                            } else {
+                                return logout();
                             }
                         } catch (_error) {
                             // if we get here, the refresh token has also expired, log the user out.

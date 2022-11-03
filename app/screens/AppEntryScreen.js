@@ -45,9 +45,7 @@ export default function AppEntryScreen() {
     useEffect(() => {
         async function prepare() {
             try {
-                console.log('trying to restore user')
                 await restoreUser();
-                console.log(user);
             } catch (e) {
                 console.error('problam restoring user from storage');
             } finally {
