@@ -34,7 +34,11 @@ function ListingsScreen({navigation}) {
             <FlatList
                 data={getListingsApi.data}
                 keyExtractor={listing => listing.id}
-                onRefresh={() => getListingsApi.request()}
+                onRefresh={() => {
+                    getListingsApi.request()
+                    getListingsApi.request()
+                    getListingsApi.request()
+                }}
                 refreshing={refreshing}
                 renderItem={ ({item}) => {
                     return <Card

@@ -13,20 +13,30 @@ const refreshToken = async token => {
     formData.append('refresh_token', token);
     formData.append('scope', 'basic');
 
-    return apiClient.post(settings.discovery.tokenEndpoint, formData, {
+    const result = await apiClient.post(settings.discovery.tokenEndpoint, formData, {
         headers: {'Content-Type': 'multipart/form-data'}
-    })
+    });
+
+    const newToken = {
+        accessToken: result.data.access_token,
+        expiresIn: result.data.expires_in,
+        refreshToken: result.data.refresh_token,
+        tokenType: result.data.token_type,
+    };
+    authStorage.storeAuthToken(newToken);
+
+    return newToken;
 }
 
 function ApiInterceptor(props) {
     const {logout} = useAuth();
+    let refreshing = null;
 
     const addTransformers = () => {
 
         const requestTransformers = apiClient.asyncRequestTransforms.length;
         const responseTransformers = apiClient.asyncResponseTransforms.length;
         const transformersAdded = requestTransformers + responseTransformers > 1;
-        console.log(requestTransformers, responseTransformers, transformersAdded);
 
         if (!transformersAdded) {
             apiClient.addAsyncRequestTransform(async request => {
@@ -62,16 +72,10 @@ function ApiInterceptor(props) {
                         originalConfig.retry = true;
                         try {
                             const token = await authStorage.getAuthToken();
-
                             if (token) {
-                                const rs = await refreshToken(token.refreshToken);
-                                const newToken = {
-                                    accessToken: rs.data.access_token,
-                                    expiresIn: rs.data.expires_in,
-                                    refreshToken: rs.data.refresh_token,
-                                    tokenType: rs.data.token_type,
-                                };
-                                authStorage.storeAuthToken(newToken);
+                                refreshing = refreshing ? refreshing : refreshToken(token.refreshToken);
+                                await refreshing;
+                                refreshing = null;
 
                                 return apiClient.any(originalConfig);
                             }
