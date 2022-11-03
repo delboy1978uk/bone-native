@@ -1,8 +1,8 @@
 // import Bugsnag from '@bugsnag/expo';
 // or sentry, whatever
 
-const log = error => {
-    console.log(error);
+const log = message => {
+    console.log(message);
     // Bugsnag.notify(error);
 };
 

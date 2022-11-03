@@ -2,20 +2,34 @@ import Constants from "expo-constants";
 
 const settings = {
     dev: {
-        apiUrl: 'https://api.mcleandigital.co.uk',
-        // apiUrl: 'http://192.168.0.204:9000',
-        registrationClientId: 'cc52460765f08d0f29ceb0deaf37645f',
-        registrationClientSecret: 'JDJ5JDEwJDNlOGZVQjdaWVl1cHl1WVZpSElLei5EcHM1MEhnWHY0dDVQNllBdzRyRGRneUdLb0RXNkFx'
+        // apiUrl: 'https://172.20.10.2',
+        apiUrl: 'https://awesome.scot',
+        authCallbackURL: 'oauth2/callback',
+        clientId: 'add10582a5750ebd2055e1005b65e530',
+        discovery: {
+            authEndpoint: 'https://awesome.scot/en_GB/oauth2/authorize',
+            tokenEndpoint: 'https://awesome.scot/en_GB/oauth2/token',
+        },
+        scheme: 'bone',
+        xDebugHeader: false,
     },
     staging: {
-        apiUrl: 'https://awesome.scot/api',
-        registrationClientId: '',
-        registrationClientSecret: ''
+        apiUrl: 'https://awesome.scot',
+        clientId: '',
+        discovery: {
+            authEndpoint: '',
+            tokenEndpoint: '',
+        },
+        xDebugHeader: false,
     },
     prod: {
-        apiUrl: 'https://awesome.scot/api',
-        registrationClientId: '',
-        registrationClientSecret: ''
+        apiUrl: 'https://awesome.scot',
+        clientId: '',
+        discovery: {
+            authEndpoint: '',
+            tokenEndpoint: '',
+        },
+        xDebugHeader: false,
     }
 }
 

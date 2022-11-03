@@ -1,15 +1,10 @@
-import React from 'react';
-import * as SplashScreen from 'expo-splash-screen';
-import {StyleSheet, View} from "react-native";
-
-import Text from '../components/Text';
-
-SplashScreen.hideAsync();
+import React, {useState} from 'react';
+import {StyleSheet} from "react-native";
 
 function TestZone(props) {
     return (
         <View style={styles.container}>
-            <Text>Ayoy!</Text>
+            <Text>Ahoy!</Text>
         </View>
     );
 }

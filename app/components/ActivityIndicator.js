@@ -11,7 +11,7 @@ function ActivityIndicator({ visible = false , type="default"}) {
         lottieRef.current?.reset();
         setTimeout(() => {
             lottieRef.current?.play();
-        }, 100)
+        }, 0)
 
     }, []);
     // fix end

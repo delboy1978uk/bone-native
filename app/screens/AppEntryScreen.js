@@ -10,6 +10,7 @@ import AuthContext from "../auth/context"
 import AuthNavigator from "../navigation/AuthNavigator"
 import authStorage from "../auth/storage"
 import Button from "../components/Button"
+import apiClient from "../api/client"
 import logger from '../utility/logger';
 import navigation from "../navigation/rootNavigation"
 import navigationTheme from "../navigation/NavigationTheme"
@@ -18,6 +19,8 @@ import Screen from "../components/Screen";
 import Text from "../components/Text"
 import WelcomeScreen from "../screens/WelcomeScreen"
 import RegistrationClient from '../api/registrationClient';
+import settings from "../config/settings";
+import Storage from "../auth/storage";
 
 logger.start();
 SplashScreen.preventAutoHideAsync();
@@ -26,35 +29,16 @@ export default function AppEntryScreen() {
 
     const [user, setUser] = useState();
     const [isReady, setIsReady] = useState(false);
-    const [token, setToken] = useState(false);
 
     const restoreUser = async () => {
-        const user = await authStorage.getUser();
+        const authToken = await authStorage.getAuthToken();
 
-        if (user) {
-            setUser(user);
-        }
-    };
+        if (authToken) {
+            const user = await authStorage.getUser();
 
-    const initClient = async () => {
-        const credentials = await authStorage.getClientCredentials();
-
-        if (!credentials) {
-            const response = await RegistrationClient.getRegistrationClientToken();
-
-            if (response.ok) {
-                const token = response.data.access_token;
-                const registerResponse = await RegistrationClient.registerDevice(token);
-
-                if (registerResponse.ok) {
-                    const client = registerResponse.data;
-                    authStorage.storeClientCredentials(client);
-                }
-            } else {
-                logger.log(response.problem);
+            if (user) {
+                setUser(user);
             }
-        } else {
-            console.log('we have credentials!', credentials);
         }
     };
 
@@ -62,10 +46,10 @@ export default function AppEntryScreen() {
         async function prepare() {
             try {
                 await restoreUser();
-                await initClient();
             } catch (e) {
-                console.warn(e);
+                console.error('problam restoring user from storage');
             } finally {
+                console.log('hiding splash screen')
                 setIsReady(true);
             }
         }

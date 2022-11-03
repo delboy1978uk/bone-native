@@ -1,61 +1,55 @@
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
-const key = 'authToken';
-const clientId = 'clientId';
-const clientSecret = 'clientSecret';
+const userKey = 'user';
+const tokenKey = 'authToken';
 
 const getUser = async () => {
-    const token = await getToken();
-
-    return token ? jwtDecode(token) : null;
+    return await fetch(userKey);
 };
 
-const storeToken = async authToken => {
-    try {
-        await SecureStore.setItemAsync(key, authToken);
-    } catch (error) {
-        console.log('error storing the auth token', error);
-    }
+const storeUser = user => {
+    store(userKey, user, 'error storing the user');
 };
 
-const getToken = async () => {
-    try {
-        return await SecureStore.getItemAsync(key);
-    } catch (error) {
-        console.log('error getting the auth token', error);
-    }
+const storeAuthToken = token => {
+    store(tokenKey, token, 'error storing the auth token');
 };
 
-const removeToken = async () => {
+const getAuthToken = async () => {
+    return await fetch(tokenKey);
+};
+
+const removeAuthToken = () => {
+    remove(tokenKey);
+}
+
+const removeUser = () => {
+    remove(userKey);
+}
+
+const remove = async key => {
     try {
         await SecureStore.deleteItemAsync(key);
     } catch (error) {
-        console.log('error removing the auth token', error);
+        console.error('error removing ' + key + ' from storage', error);
     }
 }
 
-const getClientCredentials = async () => {
+const store = (key, value, errorMessage = 'error storing value') => {
     try {
-        const id = await SecureStore.getItemAsync(clientId);
-        const secret = await SecureStore.getItemAsync(clientSecret);
-
-        return {
-            client_id: id,
-            client_secret: id,
-        }
+        SecureStore.setItemAsync(key, JSON.stringify(value));
     } catch (error) {
-        console.log('error getting the client credentials', error);
+        console.error(errorMessage, error);
     }
 }
 
-const storeClientCredentials = async settings => {
+const fetch = async key => {
     try {
-        await SecureStore.setItemAsync(clientId, settings.client_id);
-        await SecureStore.setItemAsync(clientSecret, settings.client_secret);
+        return JSON.parse(await SecureStore.getItemAsync(key));
     } catch (error) {
-        console.log('error storing the client credentials', error);
+        console.error('error fetcghing storage key ' + key, error);
     }
-};
+}
 
-export default { getClientCredentials, getToken, getUser, removeToken, storeClientCredentials, storeToken };
+export default { getAuthToken, getUser, removeAuthToken, removeUser, storeAuthToken, storeUser };

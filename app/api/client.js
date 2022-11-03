@@ -1,20 +1,11 @@
 import {create} from 'apisauce';
 
 import cache from '../utility/cache';
-import authStorage from '../auth/storage';
 import settings from '../config/settings';
+import cacheSettings from '../config/cache';
 
-const credentials = authStorage.getClientCredentials();
-const apiClient = create({baseURL: settings.apiUrl});
-
-apiClient.addAsyncRequestTransform(async request => {
-    const authToken = await authStorage.getToken();
-
-    if (!authToken) {
-        return;
-    }
-
-    request.headers['Authorization'] = 'Bearer ' + authToken;
+const apiClient = create({
+    baseURL: settings.apiUrl
 });
 
 const get = apiClient.get;
@@ -23,8 +14,9 @@ apiClient.get = async (url, params, axiosConfig) => {
     const response = await get(url, params, axiosConfig);
 
     if (response.ok) {
-        // you can add a black/white list if you dont want everything cached
-        cache.store(url, response.data);
+        if (cacheSettings.blacklist.includes(url) === false) {
+            cache.store(url, response.data);
+        }
 
         return response;
     }

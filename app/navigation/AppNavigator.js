@@ -6,6 +6,7 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import * as Notifications from 'expo-notifications';
 
 import AccountNavigator from "../navigation/AccountNavigator";
+import ApiInterceptor from "../components/ApiInterceptor";
 import expoPushTokensApi from '../api/expoPushTokens';
 import ListingEditScreen from "../screens/ListingEditScreen";
 import ListingsScreen from "../screens/ListingsScreen";
@@ -13,8 +14,8 @@ import NewListingButton from "../navigation/NewListingButton";
 import FeedNavigator from "../navigation/FeedNavigator";
 import Icon from "../components/Icon";
 import routes from "../navigation/routes";
-import navigation from "../navigation/rootNavigation"
-import useNotifications from "../hooks/useNotifications"
+import navigation from "../navigation/rootNavigation";
+import useNotifications from "../hooks/useNotifications";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,9 +23,9 @@ function AppNavigator(props) {
     useNotifications();
     const {token, setToken} = useState(null);
 
-
-
     return (
+        <>
+        <ApiInterceptor></ApiInterceptor>
         <Tab.Navigator
             screenOptions={{
                 tabBarActiveTintColor: "tomato",
@@ -67,6 +68,7 @@ function AppNavigator(props) {
                 }}
             />
         </Tab.Navigator>
+        </>
     )
 }
 
