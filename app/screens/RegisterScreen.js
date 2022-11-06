@@ -14,6 +14,7 @@ const validationSchema = Yup.object().shape({
     name: Yup.string().required().min(3).label('Name'),
     email: Yup.string().required().email().label('Email'),
     password: Yup.string().required().min(4).label('Password'),
+    confirm: Yup.string().required().oneOf([Yup.ref('password'), null], 'Passwords must match').label('Confirm')
 });
 
 function RegisterScreen(props) {
@@ -23,35 +24,37 @@ function RegisterScreen(props) {
     const [error, setError] = useState();
 
     const handleSubmit = async userInfo => {
+        console.log('posing form', userInfo)
         const result = await registerApi.request(userInfo);
 
         if (!result.ok) {
+            console.log('error!!!')
             if (result.data) {
                 setError(result.data.error);
             } else {
                 setError('An unexpected error occured');
-                console.log(result.data);
+                console.error(result);
             }
 
             return;
         }
 
-        setError(false);
-        const { data: authToken } = await loginApi.request(
-            userInfo.email,
-            userInfo.password
-        );
-        auth.login(authToken);
+        // setError(false);
+        // const { data: authToken } = await loginApi.request(
+        //     userInfo.email,
+        //     userInfo.password
+        // );
+        // auth.login(authToken);
     };
 
     return (
         <>
         <ActivityIndicator visible={registerApi.loading || loginApi.loading} type={'overlay'}/>
-            <Screen style={styles.container}>
+        <Screen style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
 
             <Form
-                initialValues={{name: '', email: '', password: ''}}
+                initialValues={{name: '', email: '', password: '', confirm: ''}}
                 onSubmit={handleSubmit}
                 validationSchema={validationSchema}
             >
@@ -75,6 +78,15 @@ function RegisterScreen(props) {
                     autoCorrect={false}
                     icon="lock"
                     placeholder="Password"
+                    secureTextEntry
+                    textContentType="password"
+                />
+                <FormField
+                    name="confirm"
+                    autoCaptitalize="none"
+                    autoCorrect={false}
+                    icon="lock"
+                    placeholder="Confirm password"
                     secureTextEntry
                     textContentType="password"
                 />

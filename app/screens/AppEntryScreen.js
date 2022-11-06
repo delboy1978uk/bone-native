@@ -49,7 +49,6 @@ export default function AppEntryScreen() {
             } catch (e) {
                 console.error('problam restoring user from storage');
             } finally {
-                console.log('hiding splash screen')
                 setIsReady(true);
             }
         }
