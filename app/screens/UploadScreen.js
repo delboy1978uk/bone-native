@@ -5,6 +5,7 @@ import AnimatedLottieView from 'lottie-react-native';
 
 import colors from '../config/colors'
 import Text from '../components/Text'
+import Animation from "react-native-web/dist/vendor/react-native/Animated/animations/Animation";
 
 function UploadScreen({onDone, progress = 0, visible = false}) {
     return (
@@ -12,7 +13,7 @@ function UploadScreen({onDone, progress = 0, visible = false}) {
             <View style={styles.container}>
                 { progress < 1
                     ? <Progress.Bar color={colors.primary} progress={progress} width={200}/>
-                    : <AnimatedLottieView
+                    : <Animation
                         autoPlay={true}
                         loop={false}
                         onAnimationFinish={onDone}
