@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, View} from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 
 function Animation({source, style, onAnimationFinish, autoplay = true, loop = true, speed = 1.5}) {
