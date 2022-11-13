@@ -15,10 +15,7 @@ import Text from '../components/Text'
 import Progress from "react-native-progress";
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required().min(3).label('Name'),
     email: Yup.string().required().email().label('Email'),
-    password: Yup.string().required().min(4).label('Password'),
-    confirm: Yup.string().required().oneOf([Yup.ref('password'), null], 'Passwords must match').label('Confirm')
 });
 
 function RegisterScreen(props) {
@@ -29,11 +26,10 @@ function RegisterScreen(props) {
     const [checkEmail, setCheckEmail] = useState(false);
 
     const handleSubmit = async userInfo => {
-        console.log('posing form', userInfo)
+
         const result = await registerApi.request(userInfo);
 
         if (!result.ok) {
-            console.log('error!!!')
             if (result.data) {
                 setError(result.data.error);
             } else {
@@ -69,16 +65,11 @@ function RegisterScreen(props) {
                     <Image style={styles.logo} source={require('../assets/logo.png')} />
 
                     <Form
-                        initialValues={{name: '', email: '', password: '', confirm: ''}}
+                        initialValues={{ email: ''}}
                         onSubmit={handleSubmit}
                         validationSchema={validationSchema}
                     >
                         <ErrorMessage error={error} visible={error} />
-                        <FormField
-                            name="name"
-                            icon="account"
-                            placeholder="Name"
-                        />
                         <FormField
                             name="email"
                             icon="email"
@@ -86,24 +77,6 @@ function RegisterScreen(props) {
                             autoCapitalize="none"
                             keyboardType="email-address"
                             textContentType="emailAddress"
-                        />
-                        <FormField
-                            name="password"
-                            autoCaptitalize="none"
-                            autoCorrect={false}
-                            icon="lock"
-                            placeholder="Password"
-                            secureTextEntry
-                            textContentType="password"
-                        />
-                        <FormField
-                            name="confirm"
-                            autoCaptitalize="none"
-                            autoCorrect={false}
-                            icon="lock"
-                            placeholder="Confirm password"
-                            secureTextEntry
-                            textContentType="password"
                         />
                         <SubmitButton color="primary" title="Register" />
                     </Form>
