@@ -9,7 +9,6 @@ import AccountNavigator from "../navigation/AccountNavigator";
 import ApiInterceptor from "../components/ApiInterceptor";
 import expoPushTokensApi from '../api/expoPushTokens';
 import ListingEditScreen from "../screens/ListingEditScreen";
-import ListingsScreen from "../screens/ListingsScreen";
 import NewListingButton from "../navigation/NewListingButton";
 import FeedNavigator from "../navigation/FeedNavigator";
 import Icon from "../components/Icon";

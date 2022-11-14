@@ -1,14 +1,12 @@
 import {StyleSheet, View} from "react-native";
-import * as SplashScreen from "expo-splash-screen";
 
 import Text from '../components/Text';
 
-SplashScreen.hideAsync();
+function ActivateUserScreen(props) {
 
-function TestZone(props) {
     return (
         <View style={styles.container}>
-            <Text>Ahoy!</Text>
+            <Text>User Activation</Text>
         </View>
     );
 }
@@ -21,6 +19,6 @@ const styles = StyleSheet.create({
     }
 })
 
-export default TestZone;
+export default ActivateUserScreen;
 
 
