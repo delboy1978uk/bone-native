@@ -17,8 +17,7 @@ import navigationTheme from "../navigation/NavigationTheme"
 import OfflineNotice from "../components/OfflineNotice"
 import Screen from "../components/Screen";
 import Text from "../components/Text"
-import WelcomeScreen from "../screens/WelcomeScreen"
-import RegistrationClient from '../api/registrationClient';
+import WelcomeScreen from "../screens/WelcomeScreen";
 import settings from "../config/settings";
 import Storage from "../auth/storage";
 

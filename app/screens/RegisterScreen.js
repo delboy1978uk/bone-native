@@ -4,7 +4,6 @@ import * as Yup from 'yup'
 
 import ActivityIndicator from "../components/ActivityIndicator";
 import Animation from "../components/Animation";
-import authApi from "../api/auth";
 import colors from "../config/colors";
 import useApi from "../hooks/useApi";
 import usersApi from '../api/users';
@@ -20,7 +19,6 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen(props) {
     const registerApi = useApi(usersApi.register);
-    const loginApi = useApi(authApi.login);
     const auth = useAuth();
     const [error, setError] = useState();
     const [checkEmail, setCheckEmail] = useState(false);
@@ -45,7 +43,7 @@ function RegisterScreen(props) {
 
     return (
         <>
-        <ActivityIndicator visible={registerApi.loading || loginApi.loading} type={'overlay'}/>
+        <ActivityIndicator visible={registerApi.loading} type={'overlay'}/>
         <ImageBackground blurRadius={10} style={styles.background} source={require('../assets/background.png')} >
             { checkEmail &&
                 <View style={styles.animationContainer}>
