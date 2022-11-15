@@ -14,7 +14,7 @@ export default useLinking = () => {
             if (parts.path !== null && parts.path !== '') {
                 switch (parts.path) {
                     case 'user/activate':
-                        navigation.navigate(routes.USER_ACTIVATION);
+                        navigation.navigate(routes.USER_ACTIVATION, parts.queryParams);
                         break;
                 }
             }

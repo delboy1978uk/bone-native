@@ -1,4 +1,6 @@
 export default Object.freeze({
-    USER_ACTIVATION: 'ActivateUser',
-    LISTING_DETAILS: 'ListingDetails'
+    LISTING_DETAILS: 'ListingDetails',
+    USER_ACTIVATION: 'Activate User',
+    USER_REGISTRATION: 'Register',
+    WELCOME: 'Welcome'
 })
