@@ -43,7 +43,7 @@ function ActivateUserScreen({navigation, route}) {
     return (
     <>
         <ActivityIndicator visible={activationApi.loading} type={'overlay'}/>
-        <ImageBackground blurRadius={10} style={styles.background} source={require('../assets/background.png')} >
+        <ImageBackground blurRadius={10} style={styles.container} source={require('../assets/background.png')} >
             { !accessToken &&
                 <>
                     <Image style={styles.logo} source={require('../assets/logo.png')} />
@@ -83,9 +83,14 @@ function ActivateUserScreen({navigation, route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
+    },
+    logo: {
+        width: 150,
+        height: 105,
+        alignSelf: "center",
+        marginTop: 50,
+        marginBottom: 20,
+    },
 })
 
 export default ActivateUserScreen;
