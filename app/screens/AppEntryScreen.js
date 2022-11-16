@@ -5,6 +5,7 @@ import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SplashScreen from 'expo-splash-screen';
 
+// import ApiInterceptor from "../components/ApiInterceptor"
 import AppNavigator from "../navigation/AppNavigator"
 import AuthContext from "../auth/context"
 import AuthNavigator from "../navigation/AuthNavigator"

@@ -11,7 +11,7 @@ const settings = {
             tokenEndpoint: 'https://awesome.scot/en_GB/oauth2/token',
         },
         scheme: 'bone',
-        xDebugHeader: false,
+        xDebugHeader: true,
     },
     staging: {
         apiUrl: 'https://awesome.scot',

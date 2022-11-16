@@ -7,7 +7,9 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import Animation from "../components/Animation";
 import {ErrorMessage, Form, FormField, SubmitButton} from "../components/forms";
 import useApi from "../hooks/useApi";
+import useAuth from "../hooks/useAuth";
 import userApi from "../api/users";
+import settings from "../config/settings";
 
 const validationSchema = Yup.object().shape({
     password: Yup.string().required().min(4).label('Password'),
@@ -18,12 +20,13 @@ function ActivateUserScreen({navigation, route}) {
     const activationApi = useApi(userApi.activateAccount);
     const [accessToken, setAccessToken] = useState(null);
     const [error, setError] = useState();
+    const {login} = useAuth();
     const email = route.params.email;
     const token = route.params.token;
 
     const handleSubmit = async userInfo => {
 
-        const result = await activationApi.request({email: email, token: token, newPassword: userInfo.password});
+        const result = await activationApi.request(email, token, settings.clientId, userInfo.password);
 
         if (!result.ok) {
             if (result.data) {
@@ -36,8 +39,7 @@ function ActivateUserScreen({navigation, route}) {
             return;
         }
 
-        alert ('oooh');
-        console.log(result.data);
+        login({accessToken: result.data.access_token, refreshToken: result.data.refresh_token});
     };
 
     return (
