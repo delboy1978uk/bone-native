@@ -2,7 +2,6 @@ import Constants from "expo-constants";
 
 const settings = {
     dev: {
-        // apiUrl: 'https://172.20.10.2',
         apiUrl: 'https://awesome.scot',
         authCallbackURL: 'oauth2/callback',
         clientId: 'add10582a5750ebd2055e1005b65e530',
