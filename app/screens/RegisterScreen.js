@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Image, ImageBackground, StyleSheet, View} from "react-native";
+import {Image, ImageBackground, Keyboard, StyleSheet, View} from "react-native";
 import * as Yup from 'yup'
 
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -24,7 +24,7 @@ function RegisterScreen(props) {
     const [checkEmail, setCheckEmail] = useState(false);
 
     const handleSubmit = async userInfo => {
-
+        Keyboard.dismiss();
         const result = await registerApi.request(userInfo);
 
         if (!result.ok) {
@@ -59,7 +59,7 @@ function RegisterScreen(props) {
                 </View>
             }
             { !checkEmail &&
-                <>
+                <View style={styles.container}>
                     <Image style={styles.logo} source={require('../assets/logo.png')} />
 
                     <Form
@@ -78,7 +78,7 @@ function RegisterScreen(props) {
                         />
                         <SubmitButton color="primary" title="Register" />
                     </Form>
-                </>
+                </View>
             }
         </ImageBackground>
         </>
@@ -87,7 +87,7 @@ function RegisterScreen(props) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        paddingHorizontal: 20,
     },
     animationContainer: {
         alignItems: 'center',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     },
     background: {
         height: '100%'
-    },
+    }
 })
 
 export default RegisterScreen;

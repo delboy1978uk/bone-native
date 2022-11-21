@@ -1,4 +1,4 @@
-import {Image, ImageBackground, StyleSheet, View} from "react-native";
+import {Image, ImageBackground, Keyboard, StyleSheet, View} from "react-native";
 import React, {useState} from "react";
 import * as Yup from 'yup'
 
@@ -25,7 +25,7 @@ function ActivateUserScreen({navigation, route}) {
     const token = route.params.token;
 
     const handleSubmit = async userInfo => {
-
+        Keyboard.dismiss();
         const result = await activationApi.request(email, token, settings.clientId, userInfo.password);
 
         if (!result.ok) {
@@ -73,7 +73,7 @@ function ActivateUserScreen({navigation, route}) {
                             secureTextEntry
                             textContentType="password"
                         />
-                        <SubmitButton color="primary" title="Change Password" />
+                        <SubmitButton color="primary" title="Set Password" />
                     </Form>
                 </>
             }
@@ -85,6 +85,7 @@ function ActivateUserScreen({navigation, route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal: 20
     },
     logo: {
         width: 150,
