@@ -26,20 +26,26 @@ function ActivateUserScreen({navigation, route}) {
 
     const handleSubmit = async userInfo => {
         Keyboard.dismiss();
-        const result = await activationApi.request(email, token, settings.clientId, userInfo.password);
+        try {
+            const result = await activationApi.request(email, token, settings.clientId, userInfo.password);
 
-        if (!result.ok) {
-            if (result.data) {
-                setError(result.data.error);
-            } else {
-                setError('An unexpected error occured');
-                console.error(result);
+            if (!result.ok) {
+                if (result.data) {
+                    setError(result.data.error);
+                } else {
+                    setError('An unexpected error occured');
+                    console.error(result);
+                }
+
+                return;
             }
 
-            return;
+            login({accessToken: result.data.access_token, refreshToken: result.data.refresh_token});
+        } catch (error) {
+            setError(error);
+            console.error(error);
         }
 
-        login({accessToken: result.data.access_token, refreshToken: result.data.refresh_token});
     };
 
     return (
