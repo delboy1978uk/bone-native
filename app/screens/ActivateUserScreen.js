@@ -1,15 +1,18 @@
 import {Image, ImageBackground, Keyboard, StyleSheet, View} from "react-native";
+import * as Linking from 'expo-linking';
 import React, {useState} from "react";
 import * as Yup from 'yup'
 
 import Button from '../components/Button';
 import colors from '../config/colors';
+import CheckEmailScreen from '../screens/CheckEmailScreen';
 import Text from '../components/Text';
 import ActivityIndicator from "../components/ActivityIndicator";
 import Animation from "../components/Animation";
 import {ErrorMessage, Form, FormField, SubmitButton} from "../components/forms";
 import useApi from "../hooks/useApi";
 import useAuth from "../hooks/useAuth";
+import useLinking from "../hooks/useLinking";
 import userApi from "../api/users";
 import settings from "../config/settings";
 
@@ -19,6 +22,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function ActivateUserScreen({navigation, route}) {
+
     const activationApi = useApi(userApi.activateAccount);
     const resendActivationApi = useApi(userApi.resendactivationEmail);
     const [accessToken, setAccessToken] = useState(null);
@@ -26,6 +30,7 @@ function ActivateUserScreen({navigation, route}) {
     const [mailSent, setMailSent] = useState(false);
     const [tokenError, setTokenError] = useState();
     const {login} = useAuth();
+    const url = Linking.useURL();
     const email = route.params.email;
     const token = route.params.token;
 
@@ -116,19 +121,7 @@ function ActivateUserScreen({navigation, route}) {
                     <Button color={'primary'} title={'Resend email'} onPress={resendActivationEmail}/>
                 </>
             }
-            { tokenError && mailSent &&
-                <View style={styles.animationContainer}>
-                    <Animation
-                        autoPlay={true}
-                        loop={true}
-                        source={require('../assets/animations/email.json')}
-                        style={styles.animation}
-                        speed={1}
-                    />
-                    <Text style={styles.activate}>Activate your account</Text>
-                    <Text style={styles.info}>Check your email and click on the link to open the app and activate your account.</Text>
-                </View>
-            }
+            { tokenError && mailSent && <CheckEmailScreen /> }
         </ImageBackground>
         </>
     );
@@ -156,28 +149,6 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontSize: 25,
         marginBottom: 10,
-        textAlign: 'center'
-    },
-    animationContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        paddingHorizontal: 10,
-        marginTop: -50
-    },
-    animation: {
-        width: 150,
-    },
-    activate: {
-        marginTop: 20,
-        textTransform: 'uppercase',
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: colors.white
-    },
-    info: {
-        color: colors.white,
         textAlign: 'center'
     },
 })
