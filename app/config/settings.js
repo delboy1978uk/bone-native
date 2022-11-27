@@ -19,6 +19,7 @@ const settings = {
             authEndpoint: '',
             tokenEndpoint: '',
         },
+        scheme: 'bone',
         xDebugHeader: false,
     },
     prod: {
@@ -28,6 +29,7 @@ const settings = {
             authEndpoint: '',
             tokenEndpoint: '',
         },
+        scheme: 'bone',
         xDebugHeader: false,
     }
 }

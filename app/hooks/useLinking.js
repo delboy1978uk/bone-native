@@ -12,7 +12,6 @@ export default useLinking = () => {
         if (url) {
             console.log('we have a url, ' + url);
             const parts = Linking.parse(url);
-            console.log(parts);
             if (parts.path !== null && parts.path !== '') {
                 switch (parts.path) {
                     case 'user/activate':
