@@ -5,6 +5,7 @@ import NetInfo, {useNetInfo} from '@react-native-community/netinfo';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SplashScreen from 'expo-splash-screen';
 
+// import ApiInterceptor from "../components/ApiInterceptor"
 import AppNavigator from "../navigation/AppNavigator"
 import AuthContext from "../auth/context"
 import AuthNavigator from "../navigation/AuthNavigator"
@@ -17,8 +18,7 @@ import navigationTheme from "../navigation/NavigationTheme"
 import OfflineNotice from "../components/OfflineNotice"
 import Screen from "../components/Screen";
 import Text from "../components/Text"
-import WelcomeScreen from "../screens/WelcomeScreen"
-import RegistrationClient from '../api/registrationClient';
+import WelcomeScreen from "../screens/WelcomeScreen";
 import settings from "../config/settings";
 import Storage from "../auth/storage";
 
@@ -49,7 +49,6 @@ export default function AppEntryScreen() {
             } catch (e) {
                 console.error('problam restoring user from storage');
             } finally {
-                console.log('hiding splash screen')
                 setIsReady(true);
             }
         }

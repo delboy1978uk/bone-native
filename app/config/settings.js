@@ -2,7 +2,6 @@ import Constants from "expo-constants";
 
 const settings = {
     dev: {
-        // apiUrl: 'https://172.20.10.2',
         apiUrl: 'https://awesome.scot',
         authCallbackURL: 'oauth2/callback',
         clientId: 'add10582a5750ebd2055e1005b65e530',
@@ -11,7 +10,7 @@ const settings = {
             tokenEndpoint: 'https://awesome.scot/en_GB/oauth2/token',
         },
         scheme: 'bone',
-        xDebugHeader: false,
+        xDebugHeader: true,
     },
     staging: {
         apiUrl: 'https://awesome.scot',
@@ -20,6 +19,7 @@ const settings = {
             authEndpoint: '',
             tokenEndpoint: '',
         },
+        scheme: 'bone',
         xDebugHeader: false,
     },
     prod: {
@@ -29,6 +29,7 @@ const settings = {
             authEndpoint: '',
             tokenEndpoint: '',
         },
+        scheme: 'bone',
         xDebugHeader: false,
     }
 }

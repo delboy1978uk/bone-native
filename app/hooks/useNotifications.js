@@ -24,10 +24,10 @@ export default useNotifications = () => {
                 finalStatus = status;
             }
             if (finalStatus !== 'granted') {
-                console.log('not granted');
                 return;
             }
             const token = (await Notifications.getExpoPushTokenAsync()).data;
+            console.log('logging token', token);
             expoPushTokensApi.register(token);
         } else {
             alert('Must use physical device for Push Notifications');

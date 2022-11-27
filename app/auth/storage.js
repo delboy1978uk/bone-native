@@ -12,8 +12,8 @@ const storeUser = user => {
     store(userKey, user, 'error storing the user');
 };
 
-const storeAuthToken = token => {
-    store(tokenKey, token, 'error storing the auth token');
+const storeAuthToken = async token => {
+    await store(tokenKey, token, 'error storing the auth token');
 };
 
 const getAuthToken = async () => {
@@ -36,9 +36,9 @@ const remove = async key => {
     }
 }
 
-const store = (key, value, errorMessage = 'error storing value') => {
+const store = async (key, value, errorMessage = 'error storing value') => {
     try {
-        SecureStore.setItemAsync(key, JSON.stringify(value));
+        await SecureStore.setItemAsync(key, JSON.stringify(value));
     } catch (error) {
         console.error(errorMessage, error);
     }

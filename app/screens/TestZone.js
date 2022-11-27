@@ -1,5 +1,9 @@
-import React, {useState} from 'react';
-import {StyleSheet} from "react-native";
+import {StyleSheet, View} from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+
+import Text from '../components/Text';
+
+SplashScreen.hideAsync();
 
 function TestZone(props) {
     return (
@@ -18,3 +22,5 @@ const styles = StyleSheet.create({
 })
 
 export default TestZone;
+
+
