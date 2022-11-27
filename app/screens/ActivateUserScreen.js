@@ -28,11 +28,11 @@ function ActivateUserScreen({navigation, route}) {
     const validateEmailTokenApi = useApi(userApi.validateEmailToken);
     const [status, setStatus] = useState(STATUS_VALIDATE);
     const [error, setError] = useState();
+    const [tokenError, setTokenError] = useState();
     const {login} = useAuth();
     const url = Linking.useURL();
     const email = route.params.email;
     const token = route.params.token;
-    let tokenError = '';
 
     const validateEmailToken = async () => {
         const result = await validateEmailTokenApi.request(email, token);
@@ -42,7 +42,7 @@ function ActivateUserScreen({navigation, route}) {
         }
 
         if (result.data.error) {
-            tokenError = result.data.error;
+            setTokenError(result.data.error);
 
             switch (result.data.error) {
                 case 'The email link has expired.':
@@ -63,7 +63,7 @@ function ActivateUserScreen({navigation, route}) {
                         case 'The email link has expired.':
                         case 'A matching email link was not found':
                         case 'The token did not match.':
-                            tokenError = result.data.error;
+                            setTokenError(result.data.error);
                             break;
                     }
                     setError(result.data.error);

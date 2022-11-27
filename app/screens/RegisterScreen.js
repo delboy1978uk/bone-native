@@ -10,6 +10,7 @@ import useApi from "../hooks/useApi";
 import usersApi from '../api/users';
 import useAuth from "../hooks/useAuth";
 import {ErrorMessage, FormField, Form, SubmitButton} from '../components/forms'
+import routes from '../navigation/routes'
 import Screen from '../components/Screen'
 import Text from '../components/Text'
 import Progress from "react-native-progress";
@@ -18,7 +19,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().required().email().label('Email'),
 });
 
-function RegisterScreen(props) {
+function RegisterScreen({navigation, route}) {
     const registerApi = useApi(usersApi.register);
     const auth = useAuth();
     const [error, setError] = useState();
@@ -39,36 +40,33 @@ function RegisterScreen(props) {
             return;
         }
 
-        setCheckEmail(true);
+        navigation.navigate(routes.USER_ACTIVATION_CHECK_EMAIL);
     };
 
     return (
         <>
         <ActivityIndicator visible={registerApi.loading} type={'overlay'}/>
         <ImageBackground blurRadius={10} style={styles.background} source={require('../assets/background.png')} >
-            { checkEmail && <CheckEmailScreen /> }
-            { !checkEmail &&
-                <View style={styles.container}>
-                    <Image style={styles.logo} source={require('../assets/logo.png')} />
+            <View style={styles.container}>
+                <Image style={styles.logo} source={require('../assets/logo.png')} />
 
-                    <Form
-                        initialValues={{ email: ''}}
-                        onSubmit={handleSubmit}
-                        validationSchema={validationSchema}
-                    >
-                        <ErrorMessage error={error} visible={error} />
-                        <FormField
-                            name="email"
-                            icon="email"
-                            placeholder="Email"
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                            textContentType="emailAddress"
-                        />
-                        <SubmitButton color="primary" title="Register" />
-                    </Form>
-                </View>
-            }
+                <Form
+                    initialValues={{ email: ''}}
+                    onSubmit={handleSubmit}
+                    validationSchema={validationSchema}
+                >
+                    <ErrorMessage error={error} visible={error} />
+                    <FormField
+                        name="email"
+                        icon="email"
+                        placeholder="Email"
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        textContentType="emailAddress"
+                    />
+                    <SubmitButton color="primary" title="Register" />
+                </Form>
+            </View>
         </ImageBackground>
         </>
     );
