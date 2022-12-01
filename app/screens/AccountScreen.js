@@ -6,6 +6,7 @@ import Icon from '../components/Icon'
 import Screen from '../components/Screen'
 import colors from '../config/colors'
 import ListItemSeparator from "../components/ListItemSeparator";
+import routes from "../navigation/routes";
 import useAuth from "../hooks/useAuth";
 
 const menuItems = [
@@ -34,9 +35,10 @@ function AccountScreen({ navigation }) {
         <Screen style={styles.screen}>
             <View style={styles.container}>
                 <ListItem
-                    title={user.name}
+                    title={user.person?.firstname}
                     subtitle={user.email}
                     image={require('../assets/delboy.jpg')}
+                    onPress={() => navigation.navigate(routes.USER_EDIT_PROFILE)}
                 />
             </View>
             <View style={styles.container}>
