@@ -19,12 +19,12 @@ import CategoryPickerItem from "../components/CategoryPickerItem";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
-    title: Yup.string().required().min(1).label('Title'),
-    price: Yup.number().required().min(0.01).max(10000).test(
-        "maxDigitsAfterDecimal",
-        "2 digits after decimal or less",
-        (number) => /^\d+(\.\d{1,2})?$/.test(number)
-    ).label('Price'),
+    firstname: Yup.string().required().min(2).max(60).label('First name'),
+    middlename: Yup.string().min(1).max(60).label('Middle name'),
+    lastname: Yup.string().required().min(1).max(60).label('Last name'),
+    aka: Yup.string().min(1).max(50).label('Display name'),
+    dob: Yup.date().required().label('Display name'),
+
     category: Yup.object().required().label('Category'),
     description: Yup.string().required().min(10).label('Description'),
     images: Yup.array().required().min(1, 'Please select at least one image')
@@ -61,34 +61,52 @@ function EditProfileScreen(props) {
                 </View>
                 <Form
                     initialValues={{
-                        title: '',
-                        price: '',
-                        category: '',
-                        description: '',
-                        images: []
+                        firstname: '',
+                        middlename: '',
+                        lastname: '',
+                        aka: '',
+                        dob: '',
+                        birthplace: '',
+                        image: '',
+                        country: '',
                     }}
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
                 >
                     <FormField
-                        name="title"
-                        placeholder="Title"
-                        maxLength={150}
+                        name="firstname"
+                        placeholder="First name"
+                        maxLength={60}
                     />
                     <FormField
-                        name="price"
-                        placeholder="Price"
-                        keyboardType="decimal-pad"
-                        maxLength={8}
-                        width={120}
+                        name="middlename"
+                        placeholder="Middle name"
+                        maxLength={60}
                     />
-
                     <FormField
-                        name="description"
-                        maxLength={255}
-                        multiline
-                        numberOfLines={3}
-                        placeholder="Description"
+                        name="lastname"
+                        placeholder="Last name"
+                        maxLength={60}
+                    />
+                    <FormField
+                        name="aka"
+                        placeholder="Display name"
+                        maxLength={50}
+                    />
+                    <FormField
+                        name="dob"
+                        placeholder="Date of Birth"
+                        maxLength={50}
+                    />
+                    <FormField
+                        name="birthplace"
+                        placeholder="Birthplace"
+                        maxLength={50}
+                    />
+                    <FormField
+                        name="country"
+                        placeholder="Country"
+                        maxLength={3}
                     />
                     <SubmitButton color="primary" title="Save changes"/>
                 </Form>
