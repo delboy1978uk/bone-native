@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Button,
     Image,
@@ -9,15 +9,17 @@ import {
     TouchableWithoutFeedback,
     View
 } from "react-native";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import {Field} from "formik";
 import * as Yup from "yup";
 
 import colors from '../config/colors';
 import Screen from '../components/Screen';
 import Text from '../components/Text';
+import userApi from "../api/users";
+import useApi from "../hooks/useApi";
 import useAuth from "../hooks/useAuth";
-import {Form, FormField, FormImagePicker, FormPicker, SubmitButton} from "../components/forms";
-import CategoryPickerItem from "../components/CategoryPickerItem";
+import {Form, FormDateTimePicker, FormField, SubmitButton} from "../components/forms";
+import ActivityIndicator from "../components/ActivityIndicator";
 
 const validationSchema = Yup.object().shape({
     firstname: Yup.string().required().min(2).max(60).label('First name'),
@@ -26,16 +28,18 @@ const validationSchema = Yup.object().shape({
     aka: Yup.string().min(1).max(50).label('Display name'),
     dob: Yup.date().required().label('Date of birth'),
     birthplace: Yup.string().required().label('Birthplace'),
-    country: Yup.string().required().min(2).max(3).label('Country'),
-    image: Yup.array().required().min(1, 'Please select at least one image')
+    country: Yup.string().required().min(2).max(3).label('Country')
 });
 
 function EditProfileScreen(props) {
     const { user } = useAuth();
+    const updateProfileApi = useApi(userApi.updateProfile);
     const person = user.person;
-    console.log(person);
-    const handleSubmit = () => {
-        alert('process form!');
+
+    const handleSubmit = values => {
+        updateProfileApi.request(values)
+            .then(console.log)
+            .catch(console.error)
     };
 
     const handleImagePress = () => {
@@ -48,6 +52,7 @@ function EditProfileScreen(props) {
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
             style={styles.container}
         >
+            <ActivityIndicator visible={updateProfileApi.loading}  type={'overlay'}/>
             <ScrollView contentContainerStyle={styles.centred}>
                 <View style={styles.wallpaper}></View>
                 <View style={styles.imageContainer}>
@@ -64,10 +69,10 @@ function EditProfileScreen(props) {
                         middlename: person.middlename,
                         lastname: person.lastname,
                         aka: person.aka,
-                        dob: person.dob,
+                        dob: person.dob ? person.dob : new Date(),
                         birthplace: person.birthplace,
                         image: person.image,
-                        country: person.country,
+                        country: person.country.iso,
                     }}
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
@@ -92,11 +97,7 @@ function EditProfileScreen(props) {
                         placeholder="Display name"
                         maxLength={50}
                     />
-                    <FormField
-                        name="dob"
-                        placeholder="Date of Birth"
-                        maxLength={50}
-                    />
+                    <FormDateTimePicker name={'dob'} />
                     <FormField
                         name="birthplace"
                         placeholder="Birthplace"
@@ -107,7 +108,7 @@ function EditProfileScreen(props) {
                         placeholder="Country"
                         maxLength={3}
                     />
-                    <SubmitButton color="primary" title="Save changes"/>
+                    <SubmitButton color="primary" title="Update profile"/>
                 </Form>
             </ScrollView>
         </KeyboardAvoidingView>
