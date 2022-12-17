@@ -38,7 +38,9 @@ function EditProfileScreen(props) {
 
     const handleSubmit = values => {
         updateProfileApi.request(values)
-            .then(console.log)
+            .then(data => {
+                // update user/person here!
+            })
             .catch(console.error)
     };
 
@@ -69,7 +71,7 @@ function EditProfileScreen(props) {
                         middlename: person.middlename,
                         lastname: person.lastname,
                         aka: person.aka,
-                        dob: person.dob ? person.dob : new Date(),
+                        dob: person.dob ? new Date(person.dob) : new Date(),
                         birthplace: person.birthplace,
                         image: person.image,
                         country: person.country.iso,
