@@ -13,6 +13,7 @@ export default useAuth = () => {
         await authStorage.storeAuthToken(authToken).then(async () => {
             const user = await profileApi.request();
             authStorage.storeUser(user.data);
+            user.data.authToken = authToken;
             setUser(user.data);
         });
     }

@@ -6,6 +6,7 @@ const register = userInfo => client.post('/api/user/register', userInfo);
 const resendactivationEmail = email => client.post('/api/user/resend-activation-email', {email: email});
 const updateProfile = profileInfo => client.put('/api/user/profile', profileInfo);
 const validateEmailToken = (email, token) => client.post('/api/user/validate-email-token', {email: email, token: token});
+const userImage = () => client.get('/api/user/image');
 
 export default {
     activateAccount,
@@ -13,5 +14,6 @@ export default {
     register,
     resendactivationEmail,
     updateProfile,
+    userImage,
     validateEmailToken
 };

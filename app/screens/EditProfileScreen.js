@@ -13,6 +13,7 @@ import {Field} from "formik";
 import * as Yup from "yup";
 
 import colors from '../config/colors';
+import ProtectedImage from '../components/ProtectedImage';
 import Screen from '../components/Screen';
 import Text from '../components/Text';
 import userApi from "../api/users";
@@ -36,6 +37,8 @@ function EditProfileScreen(props) {
     const updateProfileApi = useApi(userApi.updateProfile);
     const person = user.person;
 
+    console.log(person.image);
+
     const handleSubmit = values => {
         updateProfileApi.request(values)
             .then(data => {
@@ -58,8 +61,8 @@ function EditProfileScreen(props) {
             <ScrollView contentContainerStyle={styles.centred}>
                 <View style={styles.wallpaper}></View>
                 <View style={styles.imageContainer}>
-                    {user.image && <Image style={styles.image} source={user.image}></Image>}
-                    {!user.image &&
+                    {person.image && <ProtectedImage style={styles.image} uri={person.image} />}
+                    {!person.image &&
                         <TouchableWithoutFeedback onPress={handleImagePress}>
                             <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>
                         </TouchableWithoutFeedback>

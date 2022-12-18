@@ -24,12 +24,13 @@ const refreshToken = async token => {
         tokenType: result.data.token_type,
     };
     authStorage.storeAuthToken(newToken);
+    user.person.authToken = newToken.accessToken;
 
     return newToken;
 }
 
 function ApiInterceptor(props) {
-    const {logout} = useAuth();
+    const {logout, user} = useAuth();
     let refreshing = null;
 
     const addTransformers = () => {
