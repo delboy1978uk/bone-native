@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    Alert,
     Button,
     Image,
     KeyboardAvoidingView,
@@ -37,8 +38,6 @@ function EditProfileScreen(props) {
     const updateProfileApi = useApi(userApi.updateProfile);
     const person = user.person;
 
-    console.log(person.image);
-
     const handleSubmit = values => {
         updateProfileApi.request(values)
             .then(data => {
@@ -48,7 +47,17 @@ function EditProfileScreen(props) {
     };
 
     const handleImagePress = () => {
-        alert('handle image press!');
+        Alert.alert('Update profile image', 'Please choose..', [{
+                text: 'Camera',
+                onPress: () => Alert.alert('Camera pressed'),
+            },{
+                text: 'Photos',
+                onPress: () => Alert.alert('Photos pressed'),
+            },{
+                text: 'Cancel',
+                onPress: () => {}
+            }]
+        );
     };
 
     return (
@@ -60,14 +69,12 @@ function EditProfileScreen(props) {
             <ActivityIndicator visible={updateProfileApi.loading}  type={'overlay'}/>
             <ScrollView contentContainerStyle={styles.centred}>
                 <View style={styles.wallpaper}></View>
-                <View style={styles.imageContainer}>
-                    {person.image && <ProtectedImage style={styles.image} uri={person.image} />}
-                    {!person.image &&
-                        <TouchableWithoutFeedback onPress={handleImagePress}>
-                            <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>
-                        </TouchableWithoutFeedback>
-                    }
-                </View>
+                <TouchableWithoutFeedback onPress={handleImagePress}>
+                    <View style={styles.imageContainer}>
+                        { person.image && <ProtectedImage style={styles.image} uri={user.person.image} /> }
+                        { !person.image &&  <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image> }
+                    </View>
+                </TouchableWithoutFeedback>
                 <Form
                     initialValues={{
                         firstname: person.firstname,
@@ -77,7 +84,7 @@ function EditProfileScreen(props) {
                         dob: person.dob ? new Date(person.dob) : new Date(),
                         birthplace: person.birthplace,
                         image: person.image,
-                        country: person.country.iso,
+                        country: person.country?.iso,
                     }}
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         alignItems: "center",
-        width: '100%'
+        width: '100%',
     }
 })
 

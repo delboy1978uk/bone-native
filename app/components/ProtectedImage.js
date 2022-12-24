@@ -7,16 +7,18 @@ import navigation from "../navigation/rootNavigation";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../auth/context";
 
-function ProtectedImage({style, uri}) {
+function ProtectedImage({style, uri, onPress}) {
     const {user} = useContext(AuthContext);
 
-    console.log(user);
-    console.log(uri);
+    const handleError = error => {
+        console.log(error)
+    };
 
     return(
         <Image
             source={{ headers: {Authorization: 'Bearer ' + user.authToken.accessToken }, uri: uri}}
             style={style}
+            onError={handleError}
         ></Image>
     );
 }
