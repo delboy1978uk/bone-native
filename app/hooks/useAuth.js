@@ -18,11 +18,16 @@ export default useAuth = () => {
         });
     }
 
+    const updateUser = user => {
+        authStorage.storeUser(user);
+        setUser(user);
+    }
+
     const logout = () => {
         setUser(null);
         authStorage.removeAuthToken();
         authStorage.removeUser();
     }
 
-    return {login, logout, user};
+    return {login, logout, updateUser, user};
 }

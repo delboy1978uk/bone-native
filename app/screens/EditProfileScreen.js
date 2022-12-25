@@ -34,14 +34,16 @@ const validationSchema = Yup.object().shape({
 });
 
 function EditProfileScreen(props) {
-    const { user } = useAuth();
+    const { updateUser, user } = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
     const person = user.person;
 
     const handleSubmit = values => {
         updateProfileApi.request(values)
             .then(data => {
-                // update user/person here!
+                user.person = data.data;
+                updateUser(user);
+
             })
             .catch(console.error)
     };
