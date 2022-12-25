@@ -10,6 +10,7 @@ export default useAuth = () => {
     const {user, setUser} = useContext(AuthContext);
 
     const login = async authToken => {
+        // possibly don't wait here?
         await authStorage.storeAuthToken(authToken).then(async () => {
             const user = await profileApi.request();
             authStorage.storeUser(user.data);
