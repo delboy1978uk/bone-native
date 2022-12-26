@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {Alert, Image, StyleSheet, TouchableWithoutFeedback, View} from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { Camera, CameraType } from 'expo-camera';
 
 import colors from '../config/colors'
 import Icon from './Icon'

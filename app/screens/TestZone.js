@@ -1,55 +1,60 @@
-import {StyleSheet, View} from "react-native";
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import * as SplashScreen from "expo-splash-screen";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { Camera, CameraType,  } from 'expo-camera';
+import {Alert, Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import Button from '../components/Button';
-import Text from '../components/Text';
+import Icon from '../components/Icon'
+import Screen from '../components/Screen'
+import RoundIconButton from '../components/RoundIconButton'
 
 SplashScreen.hideAsync();
 
 function TestZone(props) {
-    const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+    const cameraRef = useRef();
+    const [type, setType] = useState(CameraType.back);
+    const [cameraReady, setCameraReady] = useState(false);
+    const [permission, requestPermission] = Camera.useCameraPermissions();
 
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setShow(false);
-        setDate(currentDate);
-    };
+    const askCameraPermission = async () => {
+        return await requestPermission();
+    }
+    const initCamera = () => {
+        setCameraReady(true);
+    }
 
-    const showMode = (currentMode) => {
-        if (Platform.OS === 'android') {
-            setShow(false);
-            // for iOS, add a button that closes the picker
-        }
-        setMode(currentMode);
-    };
+    if (!permission) {
+        askCameraPermission().then(permission => {
+            if (!permission.granted) {
+                Alert.alert('Device settings alert', 'You need to allow camera permissions for this to work');
+            }
+        });
+    }
 
-    const showDatepicker = () => {
-        showMode('date');
-    };
+    const toggleCameraType = () => {
+        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+    }
 
-    const showTimepicker = () => {
-        showMode('time');
-    };
-
-    const picker = <RNDateTimePicker
-        testID="dateTimePicker"
-        value={date}
-        mode={mode}
-        is24Hour={true}
-        onChange={onChange}
-    />;
+    const takePicture = () => {
+        console.log('taking piucture?');
+        cameraRef.current.takePictureAsync().then(console.log);
+    }
 
     return (
-        <View>
-            <Button onPress={showDatepicker} title="Show date picker!" />
-            <Button onPress={showTimepicker} title="Show time picker!" />
-            <Text>selected: {date.toLocaleString()}</Text>
-            {show && (picker)}
-        </View>
+        <Screen style={styles.container}>
+            <Camera style={styles.camera} type={type} ref={cameraRef} onCameraReady={initCamera}>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.cancelButton} onPress={toggleCameraType}>
+                        <Icon size={75} name={'close'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.flipButton} onPress={toggleCameraType}>
+                        <Icon size={75} name={'camera-flip'} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.takePictureButtonContainer} >
+                    { cameraReady && <RoundIconButton icon={'camera'} onPress={takePicture} /> }
+                </View>
+            </Camera>
+        </Screen>
     );
 }
 
@@ -58,6 +63,36 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%'
+    },
+    camera: {
+        flex: 1,
+        width: '100%'
+    },
+    buttonContainer: {
+        height: 50,
+        width: '100%',
+        alignItems: 'flex-end',
+        flexDirection: 'row',
+    },
+    takePictureButtonContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+    },
+    cancelButton: {
+        flex: 1,
+        height: 50,
+        alignItems: "flex-start"
+    },
+    flipButton: {
+        flex: 1,
+        height: 50,
+        alignItems: "flex-end"
+    },
+    text: {
+        color: 'white',
+        fontSize: 20
     }
 })
 
