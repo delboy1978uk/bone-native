@@ -4,11 +4,13 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 import colors from '../config/colors'
 
-function RoundIconButton({ icon, onPress }) {
+function RoundIconButton({ icon, onPress = () => {}, style }) {
+    const combinedStyle =  { ...styles.container, ...style };
+
     return (
         <TouchableOpacity onPress={ onPress } >
-            <View style={styles.container}>
-                <MaterialCommunityIcons style={styles.icon} name={'camera'} size={40}/>
+            <View style={combinedStyle}>
+                <MaterialCommunityIcons style={styles.icon} name={icon} size={40}/>
             </View>
         </TouchableOpacity>
     );
