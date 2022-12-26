@@ -37,8 +37,8 @@ function ImageInput({imageUri, onChangeImage}) {
                 quality: 0.5
             });
 
-            if (!result.cancelled) {
-                onChangeImage(result.uri);
+            if (!result.canceled) {
+                onChangeImage(result.assets[0].uri);
             }
         } catch (error) {
             Alert.alert('Image error', 'Error reading image');
@@ -47,7 +47,7 @@ function ImageInput({imageUri, onChangeImage}) {
 
     return <TouchableWithoutFeedback onPress={handlePress}>
         <View style={styles.container}>
-            { !imageUri && <Icon name={'camera'} size={75} iconColor={colors.medium} />}
+            { !imageUri && <Icon name={'image'} size={75} iconColor={colors.medium} />}
             { imageUri && <Image source={{uri: imageUri}} style={styles.image} />}
         </View>
     </TouchableWithoutFeedback>

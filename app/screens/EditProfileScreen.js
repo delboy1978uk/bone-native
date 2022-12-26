@@ -14,6 +14,7 @@ import {Field} from "formik";
 import * as Yup from "yup";
 
 import colors from '../config/colors';
+import ImageInput from '../components/ImageInput';
 import ProtectedImage from '../components/ProtectedImage';
 import Screen from '../components/Screen';
 import Text from '../components/Text';
@@ -62,6 +63,10 @@ function EditProfileScreen(props) {
         );
     };
 
+    const uploadImage = image => {
+        console.log(image);
+    };
+
     return (
         <KeyboardAvoidingView
             behavior="position"
@@ -71,6 +76,7 @@ function EditProfileScreen(props) {
             <ActivityIndicator visible={updateProfileApi.loading}  type={'overlay'}/>
             <ScrollView contentContainerStyle={styles.centred}>
                 <View style={styles.wallpaper}></View>
+                <ImageInput onChangeImage={uploadImage} imageUri={''} />
                 <TouchableWithoutFeedback onPress={handleImagePress}>
                     <View style={styles.imageContainer}>
                         { person.image && <ProtectedImage style={styles.image} uri={user.person.image} /> }
