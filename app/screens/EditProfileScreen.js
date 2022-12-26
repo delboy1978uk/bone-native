@@ -13,6 +13,7 @@ import {
 import {Field} from "formik";
 import * as Yup from "yup";
 
+import CameraInput from '../components/CameraInput';
 import colors from '../config/colors';
 import ImageInput from '../components/ImageInput';
 import ProtectedImage from '../components/ProtectedImage';
@@ -35,6 +36,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function EditProfileScreen(props) {
+    const [imageMode, setImageMode] = useState('profile');
     const { updateUser, user } = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
     const person = user.person;
@@ -49,19 +51,9 @@ function EditProfileScreen(props) {
             .catch(console.error)
     };
 
-    const handleImagePress = () => {
-        Alert.alert('Update profile image', 'Please choose..', [{
-                text: 'Camera',
-                onPress: () => Alert.alert('Camera pressed'),
-            },{
-                text: 'Photos',
-                onPress: () => Alert.alert('Photos pressed'),
-            },{
-                text: 'Cancel',
-                onPress: () => {}
-            }]
-        );
-    };
+    const cancelImageChoice = () => {
+        setImageMode('profile');
+    }
 
     const uploadImage = image => {
         console.log(image);
@@ -76,13 +68,17 @@ function EditProfileScreen(props) {
             <ActivityIndicator visible={updateProfileApi.loading}  type={'overlay'}/>
             <ScrollView contentContainerStyle={styles.centred}>
                 <View style={styles.wallpaper}></View>
-                <ImageInput onChangeImage={uploadImage} imageUri={''} />
-                <TouchableWithoutFeedback onPress={handleImagePress}>
+                { imageMode === 'upload'  && <>
+                    <ImageInput onChangeImage={uploadImage} imageUri={''} onCancel={cancelImageChoice}/>
+                    <CameraInput onChangeImage={uploadImage} imageUri={''} onCancel={cancelImageChoice}/>
+                    <Button title={'Cancel'} onPress={cancelImageChoice} />
+                </> }
+                { imageMode === 'profile'  && <TouchableWithoutFeedback onPress={() => setImageMode('upload')}>
                     <View style={styles.imageContainer}>
                         { person.image && <ProtectedImage style={styles.image} uri={user.person.image} /> }
                         { !person.image &&  <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image> }
                     </View>
-                </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback> }
                 <Form
                     initialValues={{
                         firstname: person.firstname,

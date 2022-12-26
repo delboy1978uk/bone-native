@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import colors from '../config/colors'
 import Icon from './Icon'
 
-function ImageInput({imageUri, onChangeImage, onCancel}) {
+function CameraInput({imageUri, onChangeImage, onCancel}) {
 
     useEffect(() => {
         requestPermission();
@@ -51,7 +51,7 @@ function ImageInput({imageUri, onChangeImage, onCancel}) {
 
     return <TouchableWithoutFeedback onPress={handlePress}>
         <View style={styles.container}>
-            { !imageUri && <Icon name={'image'} size={75} iconColor={colors.medium} />}
+            { !imageUri && <Icon name={'camera'} size={75} iconColor={colors.medium} />}
             { imageUri && <Image source={{uri: imageUri}} style={styles.image} />}
         </View>
     </TouchableWithoutFeedback>
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ImageInput;
+export default CameraInput;
