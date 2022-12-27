@@ -6,6 +6,7 @@ import Icon from '../components/Icon'
 import Screen from '../components/Screen'
 import RoundIconButton from '../components/RoundIconButton'
 import colors from "react-native/Libraries/NewAppScreen/components/Colors";
+import * as ImagePicker from "expo-image-picker";
 
 function CameraScreen({ onPhotoSelected = uri => {}, onClose = () => {} }) {
 
@@ -51,6 +52,30 @@ function CameraScreen({ onPhotoSelected = uri => {}, onClose = () => {} }) {
         onPhotoSelected(preview.uri);
     }
 
+    const selectPhoto = async () => {
+        const {granted} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!granted) {
+            Alert.alert('Device settings alert', 'You need to allow media library permissions for this to work');
+
+            return;
+        }
+
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 0.5
+            });
+
+            if (!result.canceled) {
+                onPhotoSelected(result.assets[0].uri);
+            }
+        } catch (error) {
+            Alert.alert('Image error', 'Error reading image');
+            console.error(error)
+        }
+    }
+
     return (
         <Screen style={styles.container}>
 
@@ -59,9 +84,14 @@ function CameraScreen({ onPhotoSelected = uri => {}, onClose = () => {} }) {
                     <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                         <Icon size={75} name={'close'} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.flipButton} onPress={toggleCameraType}>
-                        <Icon size={75} name={'camera-flip'} />
-                    </TouchableOpacity>
+                    <View style={styles.topButtons} >
+                        <TouchableOpacity onPress={selectPhoto}>
+                            <Icon size={75} name={'image'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={toggleCameraType}>
+                            <Icon size={75} name={'camera-flip'} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.takePictureButtonContainer} >
                     { cameraReady && <RoundIconButton icon={'camera'} onPress={takePicture} /> }
@@ -73,7 +103,7 @@ function CameraScreen({ onPhotoSelected = uri => {}, onClose = () => {} }) {
                     <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
                         <Icon size={75} name={'close'} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.flipButton} onPress={retakePicture}>
+                    <TouchableOpacity style={styles.topButtons} onPress={retakePicture}>
                         <Icon size={75} name={'camera-retake'} />
                     </TouchableOpacity>
                 </View>
@@ -112,10 +142,11 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "flex-start"
     },
-    flipButton: {
+    topButtons: {
         flex: 1,
         height: 50,
-        alignItems: "flex-end"
+        justifyContent: "flex-end",
+        flexDirection: 'row'
     },
     text: {
         color: 'white',
