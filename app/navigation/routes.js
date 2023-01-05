@@ -3,5 +3,6 @@ export default Object.freeze({
     USER_ACTIVATION: 'Activate User',
     USER_REGISTRATION: 'Register',
     USER_ACTIVATION_CHECK_EMAIL: 'Check your email',
-    WELCOME: 'Welcome'
+    USER_EDIT_PROFILE: 'Edit Profile',
+    WELCOME: 'Welcome',
 })

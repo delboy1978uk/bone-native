@@ -8,9 +8,7 @@ export default useLinking = () => {
     const url = Linking.useURL();
 
     useEffect(() => {
-        console.log('checking url triggered');
         if (url) {
-            console.log('we have a url, ' + url);
             const parts = Linking.parse(url);
             if (parts.path !== null && parts.path !== '') {
                 switch (parts.path) {

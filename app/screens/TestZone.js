@@ -1,24 +1,18 @@
-import {StyleSheet, View} from "react-native";
+import React, {useRef, useState} from 'react';
 import * as SplashScreen from "expo-splash-screen";
+import {StyleSheet, Text, View} from 'react-native';
 
-import Text from '../components/Text';
+import CameraScreen from '../screens/CameraScreen';
 
 SplashScreen.hideAsync();
 
-function TestZone(props) {
-    return (
-        <View style={styles.container}>
-            <Text>Ahoy!</Text>
-        </View>
-    );
+function TestZone(props)
+{
+    return <CameraScreen onClose={() => alert('closed!')} onPhotoSelected={uri => alert(uri) }/>
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
+
 })
 
 export default TestZone;
