@@ -27,7 +27,7 @@ apiClient.get = async (url, params, axiosConfig) => {
     return data ? {ok: true, data: data} : response;
 }
 
-apiClient.refreshToken = async token => {
+apiClient.refreshToken = async (token, user) => {
     const formData = new FormData();
     formData.append('client_id', settings.clientId);
     formData.append('grant_type', 'refresh_token');
@@ -47,9 +47,10 @@ apiClient.refreshToken = async token => {
 
     const timeout = (newToken.expiresIn - 30) * 1000;
     authStorage.storeAuthToken(newToken);
+    user.authToken = newToken;
 
     setTimeout(() => {
-        apiClient.refreshToken(newToken.refreshToken);
+        apiClient.refreshToken(newToken.refreshToken, user);
     }, timeout);
 
     return newToken;

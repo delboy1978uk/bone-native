@@ -54,7 +54,7 @@ function WelcomeScreen(props) {
             .then(newToken => {
                 const timeout = (newToken.expiresIn - 30) * 1000;
                 setTimeout(() => {
-                    apiClient.refreshToken(newToken.refreshToken);
+                    apiClient.refreshToken(newToken.refreshToken, user);
                 }, timeout);
                 login(newToken);
             })

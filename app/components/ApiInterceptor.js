@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 
 
 function ApiInterceptor(props) {
-    const {logout} = useAuth();
+    const {user, logout} = useAuth();
     let refreshing = null;
 
     const addTransformers = () => {
@@ -54,6 +54,8 @@ function ApiInterceptor(props) {
                                 // so only one call to refresh will be made in the case of multile async 401s
                                 refreshing = refreshing ? refreshing : apiClient.refreshToken(token.refreshToken);
                                 await refreshing;
+                                user.authToken = refreshing;
+                                console.log('xxx', user);
                                 refreshing = null;
 
                                 return apiClient.any(originalConfig);
