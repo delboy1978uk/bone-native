@@ -36,7 +36,7 @@
     "web": {
       "favicon": "./app/assets/favicon.png"
     },
-    "description": "A marketplace for selling the stuff you dont need anymore",
+    "description": "A skeleton project for all new Bone Framework apps",
     "extra": {
       "eas": {
         "projectId": "d216e1c7-29aa-4d2d-a535-88065482b06e"
