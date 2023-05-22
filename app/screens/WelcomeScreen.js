@@ -3,7 +3,6 @@ import {Image, ImageBackground, StyleSheet, Text, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {exchangeCodeAsync, makeRedirectUri, useAuthRequest} from "expo-auth-session";
 
-import apiClient from '../api/client'
 import Button from '../components/Button'
 import colors from '../config/colors'
 import useAuth from "../hooks/useAuth";
@@ -51,12 +50,8 @@ function WelcomeScreen(props) {
             code: code,
             extraParams: { code_verifier: request.codeVerifier }
         }, discovery)
-            .then(newToken => {
-                const timeout = (newToken.expiresIn - 30) * 1000;
-                setTimeout(() => {
-                    apiClient.refreshToken(newToken.refreshToken);
-                }, timeout);
-                login(newToken);
+            .then(response => {
+                login(response);
             })
             .catch(error => console.error('urgh', error));
     }

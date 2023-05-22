@@ -5,6 +5,28 @@ import authStorage from "../auth/storage";
 import settings from "../config/settings";
 import useAuth from '../hooks/useAuth';
 
+// call to refresh an access token using our refresh token
+const refreshToken = async token => {
+    const formData = new FormData();
+    formData.append('client_id', settings.clientId);
+    formData.append('grant_type', 'refresh_token');
+    formData.append('refresh_token', token);
+    formData.append('scope', 'basic');
+
+    const result = await apiClient.post(settings.discovery.tokenEndpoint, formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+    });
+
+    const newToken = {
+        accessToken: result.data.access_token,
+        expiresIn: result.data.expires_in,
+        refreshToken: result.data.refresh_token,
+        tokenType: result.data.token_type,
+    };
+    authStorage.storeAuthToken(newToken);
+
+    return newToken;
+}
 
 function ApiInterceptor(props) {
     const {logout} = useAuth();
@@ -52,7 +74,7 @@ function ApiInterceptor(props) {
                             if (token) {
                                 // first request to refresh will call the method, all the other requests will await the promise
                                 // so only one call to refresh will be made in the case of multile async 401s
-                                refreshing = refreshing ? refreshing : apiClient.refreshToken(token.refreshToken);
+                                refreshing = refreshing ? refreshing : refreshToken(token.refreshToken);
                                 await refreshing;
                                 refreshing = null;
 
