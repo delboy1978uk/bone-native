@@ -8,9 +8,8 @@ import useAuth from "../hooks/useAuth";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
 
-function ProtectedImage({style, uri, onPress}) {
+function ProtectedImage({style, uri, onPress, hgandleError}) {
     const {user} = useContext(AuthContext);
-
 
     const handleError = error => {
         console.log(error)

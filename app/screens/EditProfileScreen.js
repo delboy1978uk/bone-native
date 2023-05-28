@@ -37,11 +37,11 @@ const validationSchema = Yup.object().shape({
 });
 
 function EditProfileScreen(props) {
-    const [imageMode, setImageMode] = useState('profile');
     const [progressVisible, setProgressVisible] = useState(false);
     const [progress, setProgress] = useState(0);
     const { updateUser, user } = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
+    const userImageApi = useApi(userApi.userImage());
     const person = user.person;
 
     const handleSubmit = values => {
@@ -54,91 +54,83 @@ function EditProfileScreen(props) {
             .catch(console.error)
     };
 
-    const cancelImageChoice = () => {
-        setImageMode('profile');
-    }
-
     const uploadImage = image => {
         console.log(image);
     };
 
+    const selectImage = () => {
+
+    }
+
     return (
         <>
-            { imageMode === 'upload'  &&
-                <CameraScreen
-                    onPhotoSelected={ uri => { console.log(uri); } }
-                    onClose={ () => setImageMode('profile') }
-                />
-            }
-            {imageMode === 'profile' &&
-                <KeyboardAvoidingView
-                    behavior="position"
-                    keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
-                    style={styles.container}
-                >
-                    <ActivityIndicator visible={updateProfileApi.loading} type={'overlay'}/>
-                    <UploadScreen onDone={() => setProgressVisible(false)} progress={progress}
-                                  visible={progressVisible}/>
-                    <ScrollView contentContainerStyle={styles.centred}>
-                        <View style={styles.wallpaper}></View>
+            <KeyboardAvoidingView
+                behavior="position"
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
+                style={styles.container}
+            >
+                <ActivityIndicator visible={updateProfileApi.loading} type={'overlay'}/>
+                <UploadScreen onDone={() => setProgressVisible(false)} progress={progress}
+                              visible={progressVisible}/>
+                <ScrollView contentContainerStyle={styles.centred}>
+                    <View style={styles.wallpaper}></View>
 
-                        <TouchableWithoutFeedback onPress={() => setImageMode('upload')}>
-                            <View style={styles.imageContainer}>
-                                {person.image && <ProtectedImage style={styles.image} uri={user.person.image}/>}
-                                {!person.image &&
-                                    <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>}
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <Form
-                            initialValues={{
-                                firstname: person.firstname,
-                                middlename: person.middlename,
-                                lastname: person.lastname,
-                                aka: person.aka,
-                                dob: person.dob ? new Date(person.dob) : new Date(),
-                                birthplace: person.birthplace,
-                                image: person.image,
-                                country: person.country?.iso,
-                            }}
-                            onSubmit={handleSubmit}
-                            validationSchema={validationSchema}
-                        >
-                            <FormField
-                                name="firstname"
-                                placeholder="First name"
-                                maxLength={60}
-                            />
-                            <FormField
-                                name="middlename"
-                                placeholder="Middle name"
-                                maxLength={60}
-                            />
-                            <FormField
-                                name="lastname"
-                                placeholder="Last name"
-                                maxLength={60}
-                            />
-                            <FormField
-                                name="aka"
-                                placeholder="Display name"
-                                maxLength={50}
-                            />
-                            <FormDateTimePicker name={'dob'}/>
-                            <FormField
-                                name="birthplace"
-                                placeholder="Birthplace"
-                                maxLength={50}
-                            />
-                            <FormField
-                                name="country"
-                                placeholder="Country"
-                                maxLength={3}
-                            />
-                            <SubmitButton color="primary" title="Update profile"/>
-                        </Form>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            }
+                    <TouchableWithoutFeedback onPress={() => {}} >
+                        <View style={styles.imageContainer}>
+                            {person.image && <ProtectedImage style={styles.image} uri={user.person.image}/>}
+                            {!person.image &&
+                                <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>}
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <Form
+                        initialValues={{
+                            firstname: person.firstname,
+                            middlename: person.middlename,
+                            lastname: person.lastname,
+                            aka: person.aka,
+                            dob: person.dob ? new Date(person.dob) : new Date(),
+                            birthplace: person.birthplace,
+                            image: person.image,
+                            country: person.country?.iso,
+                        }}
+                        onSubmit={handleSubmit}
+                        validationSchema={validationSchema}
+                    >
+                        <FormField
+                            name="firstname"
+                            placeholder="First name"
+                            maxLength={60}
+                        />
+                        <FormField
+                            name="middlename"
+                            placeholder="Middle name"
+                            maxLength={60}
+                        />
+                        <FormField
+                            name="lastname"
+                            placeholder="Last name"
+                            maxLength={60}
+                        />
+                        <FormField
+                            name="aka"
+                            placeholder="Display name"
+                            maxLength={50}
+                        />
+                        <FormDateTimePicker name={'dob'}/>
+                        <FormField
+                            name="birthplace"
+                            placeholder="Birthplace"
+                            maxLength={50}
+                        />
+                        <FormField
+                            name="country"
+                            placeholder="Country"
+                            maxLength={3}
+                        />
+                        <SubmitButton color="primary" title="Update profile"/>
+                    </Form>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </>
     );
 }
