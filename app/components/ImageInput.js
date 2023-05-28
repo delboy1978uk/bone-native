@@ -6,7 +6,7 @@ import { Camera } from 'expo-camera';
 import colors from '../config/colors'
 import Icon from './Icon'
 
-function ImageInput({imageUri, onChangeImage = () => {}}) {
+function ImageInput({imageUri, onChangeImage = () => {}, mode = 'both'}) {
 
     useEffect(() => {
         requestPermission();
@@ -26,24 +26,35 @@ function ImageInput({imageUri, onChangeImage = () => {}}) {
 
     const handlePress = () => {
         if (!imageUri) {
-            Alert.alert(
-                'Please choose',
-                null,
-                [
-                    {
-                        text: 'Photos',
-                        onPress: () => selectImage('photos')
-                    },
-                    {
-                        text: 'Camera',
-                        onPress: () => selectImage('camera')
-                    },
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    }
-                ]
-            );
+            switch (mode) {
+                case 'camera':
+                    selectImage('camera')
+                    break;
+                case 'photos':
+                    selectImage('photos');
+                    break;
+                case 'both':
+                default:
+                    Alert.alert(
+                        'Please choose',
+                        null,
+                        [
+                            {
+                                text: 'Photos',
+                                onPress: () => selectImage('photos')
+                            },
+                            {
+                                text: 'Camera',
+                                onPress: () => selectImage('camera')
+                            },
+                            {
+                                text: 'Cancel',
+                                style: 'cancel',
+                            }
+                        ]
+                    );
+            }
+
         } else {
             Alert.alert('Remove', 'are you sure you want to remove this image?', [
                 { text: 'Yes', onPress: () => onChangeImage(null)},
