@@ -6,7 +6,7 @@ import Icon from './Icon';
 import useCamera from '../hooks/useCamera';
 import usePhotos from '../hooks/usePhotos';
 
-function ImageInput({imageUri, onChangeImage, onCancel, mode = 'both'}) {
+function ImageInput({imageUri, onChangeImage, onCancel = () => {}, mode = 'both'}) {
 
     const camera = useCamera();
     const photos = usePhotos();
@@ -26,18 +26,9 @@ function ImageInput({imageUri, onChangeImage, onCancel, mode = 'both'}) {
                         'Please choose',
                         null,
                         [
-                            {
-                                text: 'Photos',
-                                onPress: () => selectImage('photos')
-                            },
-                            {
-                                text: 'Camera',
-                                onPress: () => selectImage('camera')
-                            },
-                            {
-                                text: 'Cancel',
-                                style: 'cancel',
-                            }
+                            { text: 'Photos', onPress: () => selectImage('photos') },
+                            { text: 'Camera', onPress: () => selectImage('camera') },
+                            { text: 'Cancel', style: 'cancel' }
                         ]
                     );
             }
@@ -56,23 +47,13 @@ function ImageInput({imageUri, onChangeImage, onCancel, mode = 'both'}) {
                 const result = await camera.takePhoto({
                     allowsEditing: true,
                     quality: 0.5
-                }).then(result => {
-                    if (!result.canceled) {
-                        onChangeImage(result.assets[0].uri);
-                    } else if (onCancel) {
-                        onCancel();
-                    }
                 });
-
+                result.canceled ? onCancel() : onChangeImage(result.assets[0].uri);
             } else {
                 const result = await photos.selectImage({
                     quality: 0.5
                 });
-                if (!result.canceled) {
-                    onChangeImage(result.assets[0].uri);
-                } else if (onCancel) {
-                    onCancel();
-                }
+                result.canceled ? onCancel() : onChangeImage(result.assets[0].uri);
             }
 
         } catch (error) {
