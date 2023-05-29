@@ -59,7 +59,7 @@ function EditProfileScreen(props) {
     };
 
     const selectImage = () => {
-
+        alert('yes')
     }
 
     return (
@@ -69,15 +69,15 @@ function EditProfileScreen(props) {
                 keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
                 style={styles.container}
             >
-                <ActivityIndicator visible={updateProfileApi.loading} type={'overlay'}/>
+                <ActivityIndicator visible={updateProfileApi.loading || userImageApi.loading} type={'overlay'}/>
                 <UploadScreen onDone={() => setProgressVisible(false)} progress={progress}
                               visible={progressVisible}/>
                 <ScrollView contentContainerStyle={styles.centred}>
                     <View style={styles.wallpaper}></View>
 
-                    <TouchableWithoutFeedback onPress={() => {}} >
+                    <TouchableWithoutFeedback onPress={() => {selectImage()}} >
                         <View style={styles.imageContainer}>
-                            {person.image && <ProtectedImage style={styles.image} uri={user.person.image}/>}
+                            {person.image && <ProtectedImage style={styles.image} uri={user.person.image} />}
                             {!person.image &&
                                 <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>}
                         </View>
