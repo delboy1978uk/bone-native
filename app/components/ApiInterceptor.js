@@ -6,7 +6,7 @@ import settings from "../config/settings";
 import useAuth from '../hooks/useAuth';
 
 // call to refresh an access token using our refresh token
-const refreshToken = async token => {
+const refreshToken = async (token) => {
     const formData = new FormData();
     formData.append('client_id', settings.clientId);
     formData.append('grant_type', 'refresh_token');
@@ -76,8 +76,6 @@ function ApiInterceptor(props) {
                                 // so only one call to refresh will be made in the case of multile async 401s
                                 refreshing = refreshing ? refreshing : refreshToken(token.refreshToken);
                                 await refreshing;
-                                user.authToken = refreshing;
-                                console.log('xxx', user);
                                 refreshing = null;
 
                                 return apiClient.any(originalConfig);
