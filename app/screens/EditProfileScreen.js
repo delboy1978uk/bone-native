@@ -56,13 +56,22 @@ function EditProfileScreen(props) {
     const person = user.person;
 
     const fetchProfileImage = async () => {
-        const imageInStorage = await storage.getItem();
+        const filePath = FileSystem.documentDirectory + 'profilePic';
+        const imageInStorage = null;
+
+        // try {
+        //     const imageInStorage = await FileSystem.readAsStringAsync(filePath);
+        //     console.log(imageInStorage)
+        // } catch (e) {
+        //     console.log('storage error!', e);
+        // }
 
         if (!imageInStorage) {
             console.log('fetching image from api')
             const result = await userImageApi.request();
+        console.log(result)
             const data =  base64.encode(result);
-            storage.setItem(data);
+            // FileSystem.writeAsStringAsync(data, result, {encoding: FileSystem.EncodingType.Base64});
 
             return data;
         } else {
@@ -102,7 +111,7 @@ function EditProfileScreen(props) {
     };
 
     const uploadImage = image => {
-        console.log(image);
+        console.log('XXXXX', image);
     };
 
     const cameraOrPhotos = () => {
@@ -123,7 +132,7 @@ function EditProfileScreen(props) {
                 const result = await camera.takePhoto({
                     allowsEditing: true,
                     base64: true,
-                    quality: 0.5,
+                    quality: 0.5
                 });
                 if (!result.canceled) {
                     uploadProfileImage(result.assets[0].uri);
@@ -131,9 +140,14 @@ function EditProfileScreen(props) {
                 }
             } else {
                 const result = await photos.selectImage({
-                    quality: 0.5
+                    quality: 0.5,
+                    base64: true
                 });
-                result.canceled ? null : uploadProfileImage(result.assets[0].uri);
+
+                if (!result.canceled) {
+                    uploadProfileImage(result.assets[0].uri);
+                    setProfileImage('data:image/jpeg;base64,' + result.assets[0].base64);
+                }
             }
 
         } catch (error) {
@@ -142,11 +156,11 @@ function EditProfileScreen(props) {
         }
     };
 
-    const uploadProfileImage = () => {
-        alert('upload!');
+    const uploadProfileImage = url => {
+        alert('upload!', url);
     }
 
-    const uploadProfileBackground = () => {
+    const uploadProfileBackground = () => {s
         alert('upload!');
     }
 
@@ -166,6 +180,7 @@ function EditProfileScreen(props) {
                     <TouchableWithoutFeedback onPress={() => {cameraOrPhotos()}} >
                         <View style={styles.imageContainer}>
                             {profileImage && <ProtectedImage style={styles.image} uri={profileImage} />}
+                            {/*{profileImage && <Image style={styles.image} source={profileImage} />}*/}
                             {!profileImage &&
                                 <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>}
                         </View>
