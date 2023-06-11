@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import base64 from 'base-64';
 import {
     Alert,
     Button,
@@ -10,7 +9,7 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     View
-} from "react-native";
+} from "react-native"
 import {Field} from "formik";
 import * as FileSystem from 'expo-file-system';
 import {useAsyncStorage} from "@react-native-async-storage/async-storage";
@@ -28,6 +27,7 @@ import UploadScreen from "./UploadScreen";
 import useApi from "../hooks/useApi";
 import userApi from "../api/users";
 import useAuth from "../hooks/useAuth";
+import useCache from "../hooks/useCache";
 import useCamera from "../hooks/useCamera";
 import usePhotos from "../hooks/usePhotos";
 
@@ -47,58 +47,19 @@ function EditProfileScreen(props) {
     const [profileImage, setProfileImage] = useState(null);
     const [profileBackground, setProfileBackground] = useState(null);
 
-    const storage = useAsyncStorage('profileImage');
     const { updateUser, user } = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
+    const userImageUploadApi = useApi(userApi.uploadUserImage);
     const userImageApi = useApi(userApi.userImage);
     const camera = useCamera();
     const photos = usePhotos();
     const person = user.person;
 
-    const fetchProfileImage = async () => {
-        const filePath = FileSystem.documentDirectory + 'profilePic';
-        const imageInStorage = null;
-
-        // try {
-        //     const imageInStorage = await FileSystem.readAsStringAsync(filePath);
-        //     console.log(imageInStorage)
-        // } catch (e) {
-        //     console.log('storage error!', e);
-        // }
-
-        if (!imageInStorage) {
-            console.log('fetching image from api')
-            const result = await userImageApi.request();
-        console.log(result)
-            const data =  base64.encode(result);
-            // FileSystem.writeAsStringAsync(data, result, {encoding: FileSystem.EncodingType.Base64});
-
-            return data;
-        } else {
-            console.log('storage image ')
-        }
-
-        return imageInStorage;
-    };
-
-    const fetchProfileBackground = async () => {
-        console.log('@todo background fetch')
-    };
-
-    const setImages = async () => {
-        if (null === profileImage) {
-            const image = await fetchProfileImage();
-            console.log('storing image')
-            console.log(image);
-            setProfileImage(image);
-        };
-        null === profileBackground ? setProfileBackground(await fetchProfileBackground()) : null;
-    }
-
     useEffect(() => {
-        // storage.removeItem();
-        setImages()
-    },  []);
+        if(!profileImage) {
+            setProfileImage(user.person.image);
+        }
+    }, [])
 
     const handleSubmit = values => {
         updateProfileApi.request(values)
@@ -108,10 +69,6 @@ function EditProfileScreen(props) {
 
             })
             .catch(console.error)
-    };
-
-    const uploadImage = image => {
-        console.log('XXXXX', image);
     };
 
     const cameraOrPhotos = () => {
@@ -135,8 +92,7 @@ function EditProfileScreen(props) {
                     quality: 0.5
                 });
                 if (!result.canceled) {
-                    uploadProfileImage(result.assets[0].uri);
-                    setProfileImage('data:image/jpeg;base64,' + result.assets[0].base64);
+                    handleSelection(result.assets[0].uri);
                 }
             } else {
                 const result = await photos.selectImage({
@@ -145,23 +101,32 @@ function EditProfileScreen(props) {
                 });
 
                 if (!result.canceled) {
-                    uploadProfileImage(result.assets[0].uri);
-                    setProfileImage('data:image/jpeg;base64,' + result.assets[0].base64);
+                    handleSelection(result.assets[0].uri);
                 }
             }
 
         } catch (error) {
             Alert.alert('Image error', 'Error reading image');
-            console.log(error);
+            console.error(error);
         }
     };
 
-    const uploadProfileImage = url => {
-        alert('upload!', url);
+    const handleSelection = uri => {
+        uploadProfileImage(uri);
+        setProfileImage(uri);
+        user.person.image = uri;
+        updateUser(user);
     }
 
-    const uploadProfileBackground = () => {s
-        alert('upload!');
+    const uploadProfileImage = async url => {
+        let formData = new FormData();
+        let filename = url.split('/').pop();
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        formData.append('avatar', { uri: url, name: filename, type });
+        const response = await userImageUploadApi.request(formData).catch(e => {
+            console.error('upload error', e);
+        });
     }
 
     return (
@@ -171,7 +136,7 @@ function EditProfileScreen(props) {
                 keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
                 style={styles.container}
             >
-                <ActivityIndicator visible={updateProfileApi.loading || userImageApi.loading} type={'overlay'}/>
+                <ActivityIndicator visible={updateProfileApi.loading || userImageApi.loading || userImageUploadApi.loading} type={'overlay'}/>
                 <UploadScreen onDone={() => setProgressVisible(false)} progress={progress}
                               visible={progressVisible}/>
                 <ScrollView contentContainerStyle={styles.centred}>
@@ -179,12 +144,10 @@ function EditProfileScreen(props) {
 
                     <TouchableWithoutFeedback onPress={() => {cameraOrPhotos()}} >
                         <View style={styles.imageContainer}>
-                            {profileImage && <ProtectedImage style={styles.image} uri={profileImage} />}
-                            {/*{profileImage && <Image style={styles.image} source={profileImage} />}*/}
-                            {!profileImage &&
-                                <Image style={styles.image} source={require('../assets/delboy.jpg')}></Image>}
+                            <ProtectedImage style={styles.image} uri={profileImage} />
                         </View>
                     </TouchableWithoutFeedback>
+
                     <Form
                         initialValues={{
                             firstname: person.firstname,
@@ -251,6 +214,7 @@ const styles = StyleSheet.create({
         marginTop: -75,
         borderColor: colors.white,
         borderWidth: 7,
+        backgroundColor: colors.light,
     },
     fullWidth: {
         width: '100%'

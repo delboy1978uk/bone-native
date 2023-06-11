@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwtDecode from 'jwt-decode';
 
 const userKey = 'user';
@@ -13,22 +14,22 @@ const storeUser = user => {
 };
 
 const storeAuthToken = async token => {
-    await store(tokenKey, token, 'error storing the auth token');
+    await storeSecure(tokenKey, token, 'error storing the auth token');
 };
 
 const getAuthToken = async () => {
-    return await fetch(tokenKey);
+    return await fetchSecure(tokenKey);
 };
 
 const removeAuthToken = () => {
-    remove(tokenKey);
+    removeSecure(tokenKey);
 }
 
 const removeUser = () => {
     remove(userKey);
 }
 
-const remove = async key => {
+const removeSecure = async key => {
     try {
         await SecureStore.deleteItemAsync(key);
     } catch (error) {
@@ -36,7 +37,7 @@ const remove = async key => {
     }
 }
 
-const store = async (key, value, errorMessage = 'error storing value') => {
+const storeSecure = async (key, value, errorMessage = 'error storing value') => {
     try {
         await SecureStore.setItemAsync(key, JSON.stringify(value));
     } catch (error) {
@@ -44,11 +45,35 @@ const store = async (key, value, errorMessage = 'error storing value') => {
     }
 }
 
-const fetch = async key => {
+const fetchSecure = async key => {
     try {
         return JSON.parse(await SecureStore.getItemAsync(key));
     } catch (error) {
         console.error('error fetcghing storage key ' + key, error);
+    }
+}
+
+const store = async (key, value, errorMessage = 'error storing value') => {
+    try {
+        await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+        console.error(errorMessage, error);
+    }
+}
+
+const fetch = async key => {
+    try {
+        return JSON.parse(await AsyncStorage.getItem(key));
+    } catch (error) {
+        console.error('error fetcghing storage key ' + key, error);
+    }
+}
+
+const remove = async key => {
+    try {
+        await AsyncStorage.removeItem(key);
+    } catch (error) {
+        console.error('error removing ' + key + ' from storage', error);
     }
 }
 

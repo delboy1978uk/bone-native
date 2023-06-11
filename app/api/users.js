@@ -8,7 +8,6 @@ const updateProfile = profileInfo => client.put('/api/user/profile', profileInfo
 const validateEmailToken = (email, token) => client.post('/api/user/validate-email-token', {email: email, token: token});
 const uploadUserImage = formData => client.post('/api/user/image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-    // transformRequest: formData => formData,
 });
 const userImage = () => client.get('/api/user/image');
 

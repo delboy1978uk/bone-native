@@ -19,8 +19,11 @@ export default useAuth = () => {
         });
     }
 
-    const updateUser = user => {
+    const updateUser = async user => {
+        const authToken = user.authToken;
+        await delete user.authToken;
         authStorage.storeUser(user);
+        user.authToken = authToken;
         setUser(user);
     }
 

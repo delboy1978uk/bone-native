@@ -33,7 +33,6 @@ export default function AppEntryScreen() {
         const authToken = await authStorage.getAuthToken();
 
         if (authToken) {
-            console.log(authToken)
             const user = await authStorage.getUser();
 
             if (user) {
