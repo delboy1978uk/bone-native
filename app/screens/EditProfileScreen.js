@@ -46,10 +46,12 @@ function EditProfileScreen(props) {
     const [profileImage, setProfileImage] = useState(null);
     const [profileBackground, setProfileBackground] = useState(null);
 
-    const { updateUser, user } = useAuth();
+    const { updateUser, user} = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
     const userImageUploadApi = useApi(userApi.uploadUserImage);
     const userImageApi = useApi(userApi.userImage);
+    const userBackgroundImageUploadApi = useApi(userApi.uploadUserBackgroundImage);
+    const userBackgroundImageApi = useApi(userApi.userBackgroundImage);
     const camera = useCamera();
     const photos = usePhotos();
     const person = user.person;
@@ -57,6 +59,9 @@ function EditProfileScreen(props) {
     useEffect(() => {
         if(!profileImage) {
             setProfileImage(user.person.image);
+        }
+        if(!profileImage) {
+            setProfileBackground(user.person.backgroundImage);
         }
     }, [])
 
@@ -70,19 +75,20 @@ function EditProfileScreen(props) {
             .catch(console.error)
     };
 
-    const cameraOrPhotos = () => {
+    const cameraOrPhotos = phptoOrBackground => {
+        const title = phptoOrBackground ===  'image' ? 'Edit Profile Photo' : 'Edit Profile Background'
         Alert.alert(
-            'Please choose',
+            title,
             null,
             [
-                { text: 'Photos', onPress: () => selectImage('photos') },
-                { text: 'Camera', onPress: () => selectImage('camera') },
+                { text: 'Photos', onPress: () => selectImage('photos', phptoOrBackground) },
+                { text: 'Camera', onPress: () => selectImage('camera', phptoOrBackground) },
                 { text: 'Cancel', style: 'cancel' }
             ]
         );
     }
 
-    const selectImage = async (pickerType) => {
+    const selectImage = async (pickerType, phptoOrBackground) => {
         try {
             if (pickerType === 'camera') {
                 const result = await camera.takePhoto({
@@ -91,7 +97,7 @@ function EditProfileScreen(props) {
                     quality: 0.5
                 });
                 if (!result.canceled) {
-                    handleSelection(result.assets[0].uri);
+                    handleSelection(result.assets[0].uri, phptoOrBackground);
                 }
             } else {
                 const result = await photos.selectImage({
@@ -100,7 +106,7 @@ function EditProfileScreen(props) {
                 });
 
                 if (!result.canceled) {
-                    handleSelection(result.assets[0].uri);
+                    handleSelection(result.assets[0].uri, phptoOrBackground);
                 }
             }
 
@@ -110,20 +116,26 @@ function EditProfileScreen(props) {
         }
     };
 
-    const handleSelection = uri => {
-        uploadProfileImage(uri);
-        setProfileImage(uri);
-        user.person.image = uri;
+    const handleSelection = (uri, phptoOrBackground) => {
+        if (phptoOrBackground === 'background-image')  {
+            uploadImage(uri, userBackgroundImageUploadApi, 'background');
+            setProfileBackground(uri);
+            user.person.backgroundImage = uri;
+        } else {
+            uploadImage(uri, userImageUploadApi, 'avatar');
+            setProfileImage(uri);
+            user.person.image = uri;
+        }
         updateUser(user);
     }
 
-    const uploadProfileImage = async url => {
+    const uploadImage = async (url, api, fieldName) => {
         let formData = new FormData();
         let filename = url.split('/').pop();
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
-        formData.append('avatar', { uri: url, name: filename, type });
-        const response = await userImageUploadApi.request(formData).catch(e => {
+        formData.append(fieldName, { uri: url, name: filename, type });
+        const response = await api.request(formData).catch(e => {
             console.error('upload error', e);
         });
     }
@@ -135,13 +147,16 @@ function EditProfileScreen(props) {
                 keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 140}
                 style={styles.container}
             >
-                <ActivityIndicator visible={updateProfileApi.loading || userImageApi.loading || userImageUploadApi.loading} type={'overlay'}/>
-                <UploadScreen onDone={() => setProgressVisible(false)} progress={progress}
-                              visible={progressVisible}/>
+                <ActivityIndicator visible={updateProfileApi.loading || userImageApi.loading || userImageUploadApi.loading || userBackgroundImageApi.loading || userBackgroundImageUploadApi.loading  } type={'overlay'}/>
+                <UploadScreen onDone={() => setProgressVisible(false)} progress={progress} visible={progressVisible}/>
                 <ScrollView contentContainerStyle={styles.centred}>
-                    <View style={styles.wallpaper}></View>
+                    <TouchableWithoutFeedback onPress={() => {cameraOrPhotos('background-image')}} >
+                        <View style={styles.wallpaper}>
+                            <Image style={styles.wallpaper} uri={profileBackground} />
+                        </View>
+                    </TouchableWithoutFeedback>
 
-                    <TouchableWithoutFeedback onPress={() => {cameraOrPhotos()}} >
+                    <TouchableWithoutFeedback onPress={() => {cameraOrPhotos('image')}} >
                         <View style={styles.imageContainer}>
                             <Image style={styles.image} uri={profileImage} />
                         </View>

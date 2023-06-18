@@ -41,7 +41,7 @@ function Image({style, uri, onPress, handleError, source}) {
     } else if (source) {
         imageSource = source;
     }
-    console.log(imageSource)
+
     if ((null !== user.authToken.accessToken && protectedUri == true) || protectedUri == false) {
         return (
             <RNImage
