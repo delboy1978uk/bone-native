@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
     Alert,
     Button,
-    Image,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -18,7 +17,7 @@ import * as Yup from "yup";
 import CameraScreen from '../screens/CameraScreen';
 import colors from '../config/colors';
 import ImageInput from '../components/ImageInput';
-import ProtectedImage from '../components/ProtectedImage';
+import Image from '../components/Image';
 import Screen from '../components/Screen';
 import Text from '../components/Text';
 import {Form, FormDateTimePicker, FormField, SubmitButton} from "../components/forms";
@@ -144,7 +143,7 @@ function EditProfileScreen(props) {
 
                     <TouchableWithoutFeedback onPress={() => {cameraOrPhotos()}} >
                         <View style={styles.imageContainer}>
-                            <ProtectedImage style={styles.image} uri={profileImage} />
+                            <Image style={styles.image} uri={profileImage} />
                         </View>
                     </TouchableWithoutFeedback>
 

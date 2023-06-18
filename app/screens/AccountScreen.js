@@ -30,6 +30,7 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
     const { user, logout } = useAuth();
+    console.log(user.person.image);
 
     return (
         <Screen style={styles.screen}>
@@ -37,7 +38,7 @@ function AccountScreen({ navigation }) {
                 <ListItem
                     title={user.person?.firstname}
                     subtitle={user.email}
-                    image={require('../assets/delboy.jpg')}
+                    image={{ uri: user.person.image}}
                     onPress={() => navigation.navigate(routes.USER_EDIT_PROFILE)}
                 />
             </View>
