@@ -1,25 +1,31 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableHighlight, View} from "react-native";
+import {StyleSheet, TouchableHighlight, View} from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
+import Image from '../components/Image'
 import Text from '../components/Text'
 import colors from '../config/colors'
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 function ListItem({title, subtitle, image, IconComponent, onPress, renderRightActions, displayCheverons}) {
+    if (!title && subtitle) {
+        title = subtitle;
+        subtitle = null;
+    }
+
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <TouchableHighlight underlayColor={colors.light} onPress={onPress} >
                 <View style={styles.container}>
-                    {IconComponent}
-                    {image && <Image style={styles.image} source={image}></Image>}
+                    { IconComponent }
+                    { image && <Image style={styles.image} source={image}></Image> }
                     <View style={styles.detailsContainer}>
                         <Text style={styles.title} numberOfLines={1}>
-                            {title }
+                            { title }
                         </Text>
-                        {subtitle && <Text numberOfLines={2} style={styles.subtitle}>{subtitle}</Text>}
+                        {subtitle && <Text numberOfLines={2} style={styles.subtitle}>{subtitle}</Text> }
                     </View>
-                    {displayCheverons && <MaterialCommunityIcons name={'chevron-right'} size={25} color={colors.medium}/>}
+                    { displayCheverons && <MaterialCommunityIcons name={'chevron-right'} size={25} color={colors.medium}/> }
                 </View>
             </TouchableHighlight>
         </Swipeable>

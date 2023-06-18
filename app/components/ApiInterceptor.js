@@ -6,7 +6,7 @@ import settings from "../config/settings";
 import useAuth from '../hooks/useAuth';
 
 // call to refresh an access token using our refresh token
-const refreshToken = async token => {
+const refreshToken = async (token) => {
     const formData = new FormData();
     formData.append('client_id', settings.clientId);
     formData.append('grant_type', 'refresh_token');
@@ -29,7 +29,7 @@ const refreshToken = async token => {
 }
 
 function ApiInterceptor(props) {
-    const {logout} = useAuth();
+    const {user, logout} = useAuth();
     let refreshing = null;
 
     const addTransformers = () => {

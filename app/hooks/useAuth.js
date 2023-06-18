@@ -10,11 +10,21 @@ export default useAuth = () => {
     const {user, setUser} = useContext(AuthContext);
 
     const login = async authToken => {
+        // possibly don't wait here?
         await authStorage.storeAuthToken(authToken).then(async () => {
-            const user = await profileApi.request();
+            const user = await profileApi.request(authToken);
             authStorage.storeUser(user.data);
+            user.data.authToken = authToken;
             setUser(user.data);
         });
+    }
+
+    const updateUser = async user => {
+        const authToken = user.authToken;
+        await delete user.authToken;
+        authStorage.storeUser(user);
+        user.authToken = authToken;
+        setUser({...user});
     }
 
     const logout = () => {
@@ -23,5 +33,5 @@ export default useAuth = () => {
         authStorage.removeUser();
     }
 
-    return {login, logout, user};
+    return {login, logout, updateUser, user};
 }

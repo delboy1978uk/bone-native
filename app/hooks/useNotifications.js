@@ -27,7 +27,6 @@ export default useNotifications = () => {
                 return;
             }
             const token = (await Notifications.getExpoPushTokenAsync()).data;
-            console.log('logging token', token);
             expoPushTokensApi.register(token);
         } else {
             alert('Must use physical device for Push Notifications');

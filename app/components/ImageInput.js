@@ -1,30 +1,17 @@
 import React, {useEffect} from 'react';
 import {Alert, Image, StyleSheet, TouchableWithoutFeedback, View} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Camera } from 'expo-camera';
 
 import colors from '../config/colors'
-import Icon from './Icon'
+import Icon from './Icon';
+import useCamera from '../hooks/useCamera';
+import usePhotos from '../hooks/usePhotos';
 
-function ImageInput({imageUri, onChangeImage = () => {}, mode = 'both'}) {
+function ImageInput({imageUri, onChangeImage, onCancel = () => {}, mode = 'both'}) {
 
-    useEffect(() => {
-        requestPermission();
-    }, []);
+    const camera = useCamera();
+    const photos = usePhotos();
 
-    const requestPermission = async () => {
-        const { granted: mediaLibraryGranted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        const { granted: cameraGranted } = await Camera.requestCameraPermissionsAsync();
-
-        if (!mediaLibraryGranted || !cameraGranted) {
-            Alert.alert(
-                'Device settings alert',
-                'You need to allow media library and camera permissions for this to work'
-            );
-        }
-    }
-
-    const handlePress = () => {
+    const handlePress = async () => {
         if (!imageUri) {
             switch (mode) {
                 case 'camera':
@@ -39,18 +26,9 @@ function ImageInput({imageUri, onChangeImage = () => {}, mode = 'both'}) {
                         'Please choose',
                         null,
                         [
-                            {
-                                text: 'Photos',
-                                onPress: () => selectImage('photos')
-                            },
-                            {
-                                text: 'Camera',
-                                onPress: () => selectImage('camera')
-                            },
-                            {
-                                text: 'Cancel',
-                                style: 'cancel',
-                            }
+                            { text: 'Photos', onPress: () => selectImage('photos') },
+                            { text: 'Camera', onPress: () => selectImage('camera') },
+                            { text: 'Cancel', style: 'cancel' }
                         ]
                     );
             }
@@ -66,27 +44,21 @@ function ImageInput({imageUri, onChangeImage = () => {}, mode = 'both'}) {
     const selectImage = async (pickerType) => {
         try {
             if (pickerType === 'camera') {
-                const result = await ImagePicker.launchCameraAsync({
+                const result = await camera.takePhoto({
                     allowsEditing: true,
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
                     quality: 0.5
                 });
-                if (!result.canceled) {
-                    onChangeImage(result.assets[0].uri);
-                }
+                result.canceled ? onCancel() : onChangeImage(result.assets[0].uri);
             } else {
-                const result = await ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                const result = await photos.selectImage({
                     quality: 0.5
                 });
-                if (!result.canceled) {
-                    onChangeImage(result.assets[0].uri);
-                }
+                result.canceled ? onCancel() : onChangeImage(result.assets[0].uri);
             }
 
         } catch (error) {
             Alert.alert('Image error', 'Error reading image');
-            console.log(result);
+            console.log(error);
         }
     };
 

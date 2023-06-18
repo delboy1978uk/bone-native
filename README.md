@@ -93,7 +93,7 @@ docker compose up
 Start up the frontend
 ```
 cd /path/to/bone-native-project
-npx expo start
+yarn expo start
 ```
 To stop the backend, press `CTRL-C`, then type `docker compose down` to tidy up. To stop the  frontend, it's simply `CTRL-C`.
 
