@@ -12,6 +12,8 @@ const uploadUserImage = formData => client.post('/api/user/image', formData, {
     headers: { 'Content-Type': 'multipart/form-data'},
 });
 const userImage = () => client.get('/api/user/image');
+const userSettings = () => client.get('/api/user/settings');
+const updateUserSettings = settings => client.put('/api/user/settings', settings);
 const uploadUserBackgroundImage = formData => client.post('/api/user/background-image', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
 });
@@ -27,5 +29,7 @@ export default {
     uploadUserBackgroundImage,
     userBackgroundImage,
     userImage,
+    userSettings,
+    updateUserSettings,
     validateEmailToken
 };
