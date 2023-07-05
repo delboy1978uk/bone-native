@@ -4,7 +4,7 @@ import * as Notifications from "expo-notifications";
 import * as Yup from "yup";
 
 import {Form, FormField, SubmitButton} from "./forms";
-import messagesApi from "../api/messages";
+import notificationsApi from "../api/notifications";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
 function ContactSellerForm({listing}) {
     const handleSubmit = async ({message}, { resetForm }) => {
         Keyboard.dismiss();
-        const result = await messagesApi.send(message, listing.id);
+        const result = await notificationsApi.send(message, [listing.id]);
 
         if (!result.ok) {
             console.log('Error', result);
