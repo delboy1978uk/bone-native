@@ -6,7 +6,7 @@ import * as Yup from "yup";
 
 import colors from '../config/colors'
 import ContactSellerForm from '../components/ContactSellerForm';
-import ListItem from '../components/ListItem'
+import ListItemSwipable from '../components/ListItemSwipable'
 import Text from '../components/Text'
 
 function ListingDetailsScreen({ route }) {
@@ -23,7 +23,7 @@ function ListingDetailsScreen({ route }) {
                 <Text style={styles.title}>{listing.title}</Text>
                 <Text style={styles.price}>${listing.price}</Text>
                 <View style={styles.userContainer}>
-                    <ListItem
+                    <ListItemSwipable
                         image={require('../assets/gretl.png')}
                         title="Gretl Michielsen"
                         subtitle="5 listings"

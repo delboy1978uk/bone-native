@@ -14,19 +14,21 @@ function ListItemSwipable({title, subtitle, image, IconComponent, onPress, rende
     }
 
     return (
-        <TouchableHighlight underlayColor={colors.light} onPress={onPress} >
-            <View style={styles.container}>
-                { IconComponent }
-                { image && <Image style={styles.image} source={image}></Image> }
-                <View style={styles.detailsContainer}>
-                    <Text style={styles.title} numberOfLines={1}>
-                        { title }
-                    </Text>
-                    {subtitle && <Text numberOfLines={2} style={styles.subtitle}>{subtitle}</Text> }
+        <Swipeable renderRightActions={renderRightActions}>
+            <TouchableHighlight underlayColor={colors.light} onPress={onPress} >
+                <View style={styles.container}>
+                    { IconComponent }
+                    { image && <Image style={styles.image} source={image}></Image> }
+                    <View style={styles.detailsContainer}>
+                        <Text style={styles.title} numberOfLines={1}>
+                            { title }
+                        </Text>
+                        {subtitle && <Text numberOfLines={2} style={styles.subtitle}>{subtitle}</Text> }
+                    </View>
+                    { displayCheverons && <MaterialCommunityIcons name={'chevron-right'} size={25} color={colors.medium}/> }
                 </View>
-                { displayCheverons && <MaterialCommunityIcons name={'chevron-right'} size={25} color={colors.medium}/> }
-            </View>
-        </TouchableHighlight>
+            </TouchableHighlight>
+        </Swipeable>
     );
 }
 

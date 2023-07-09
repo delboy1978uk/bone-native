@@ -1,52 +1,87 @@
-import {StyleSheet, View} from "react-native";
 import {useState} from "react";
 import * as SplashScreen from "expo-splash-screen";
-
-import ImageInput from '../components/ImageInput';
-import Button from '../components/Button';
-import Text from '../components/Text';
-import usersApi from '../api/users';
-import useApi from '../hooks/useApi';
+import {Platform, StyleSheet, Text, View, Button} from "react-native";
+import ToggleSwitch from "toggle-switch-react-native";
 
 SplashScreen.hideAsync();
 
 function TestZone(props) {
-    const [imageUri, setImageUri] = useState(null);
-    const imageApi = useApi(usersApi.uploadUserImage);
+    const [state, setState] = useState( {
+        isOnDefaultToggleSwitch: true,
+        isOnLargeToggleSwitch: false,
+        isOnBlueToggleSwitch: false
+    });
 
-    const uploadImage = async () => {
-        let formData = new FormData();
-        let filename = imageUri.split('/').pop();
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-        formData.append('avatar', { uri: imageUri, name: filename, type });
-        const response = await  imageApi.request(formData);
-        console.log(response);
+    const onToggle = (isOn) => {
+        console.log("Changed to " + isOn);
     }
 
     return (
         <View style={styles.container}>
-            <Text>Ahoy!</Text>
-            <ImageInput style={styles.picker} imageUri={imageUri} onChangeImage={uri =>{
-                console.log(uri)
-                setImageUri(uri)
-            }}/>
-            <Button onPress={async () => { uploadImage().catch(e => {console.log(e)}); }} title={'Upload'}/>
+            <Text style={styles.welcome}>Example Toggle Switch</Text>
+            <Text style={styles.instructions}>Default Toggle</Text>
+            <ToggleSwitch
+                label="Hello"
+                isOn={state.isOnDefaultToggleSwitch}
+                onToggle={isOnDefaultToggleSwitch => {
+                    setState({isOnDefaultToggleSwitch});
+                    onToggle(isOnDefaultToggleSwitch);
+                }}
+            />
+            <Text style={styles.instructions}>Default Toggle Large</Text>
+            <ToggleSwitch
+                label="Hello"
+                size="large"
+                isOn={state.isOnLargeToggleSwitch}
+                onToggle={isOnLargeToggleSwitch => {
+                    setState({isOnLargeToggleSwitch});
+                    onToggle(isOnLargeToggleSwitch);
+                }}
+            />
+            <Text style={styles.instructions}>Change On Color</Text>
+            <ToggleSwitch
+                label="Hello"
+                onColor="#2196F3"
+                isOn={state.isOnBlueToggleSwitch}
+                onToggle={isOnBlueToggleSwitch => {
+                    setState({isOnBlueToggleSwitch});
+                    onToggle(isOnBlueToggleSwitch);
+                }}
+            />
+            <Text style={styles.instructions}>Disabled Small Toggle</Text>
+            <ToggleSwitch size="small" disabled isOn={true}/>
+            <Button
+                title="Clear all"
+                onPress={() => {
+                    setState({
+                        isOnDefaultToggleSwitch: false,
+                        isOnLargeToggleSwitch: false,
+                        isOnBlueToggleSwitch: false
+                    });
+                }}
+            />
         </View>
     );
 }
 
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "white"
     },
-    picker: {
-
+    welcome: {
+        fontSize: 20,
+        textAlign: "center",
+        margin: 10
+    },
+    instructions: {
+        textAlign: "center",
+        color: "#333333",
+        marginBottom: 5
     }
-})
+});
 
 export default TestZone;

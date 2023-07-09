@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {FlatList, StyleSheet, View} from "react-native";
-import ListItem from '../components/ListItem'
+import ListItemSwipable from '../components/ListItemSwipable'
 import Icon from '../components/Icon'
 import Screen from '../components/Screen'
 import colors from '../config/colors'
@@ -11,10 +11,18 @@ import useAuth from "../hooks/useAuth";
 
 const menuItems = [
     {
+        title: "Settings",
+        icon: {
+            name: "cog",
+            backgroundColor: colors.primary
+        },
+        targetScreen: 'Settings'
+    },
+    {
         title: "My Listings",
         icon: {
             name: "format-list-bulleted",
-            backgroundColor: colors.primary
+            backgroundColor: colors.secondary
         },
         targetScreen: 'Listings'
     },
@@ -22,7 +30,7 @@ const menuItems = [
         title: "My Messages",
         icon: {
             name: "email",
-            backgroundColor: colors.secondary
+            backgroundColor: colors.primary
         },
         targetScreen: 'Messages'
     },
@@ -34,7 +42,7 @@ function AccountScreen({ navigation }) {
     return (
         <Screen style={styles.screen}>
             <View style={styles.container}>
-                <ListItem
+                <ListItemSwipable
                     title={user.person?.firstname}
                     subtitle={user.email}
                     image={{ uri: user.person?.image}}
@@ -47,7 +55,7 @@ function AccountScreen({ navigation }) {
                     ItemSeparatorComponent={() => <ListItemSeparator />}
                     keyExtractor={menuItem => menuItem.title}
                     renderItem={ ({item}) =>
-                        <ListItem
+                        <ListItemSwipable
                             title={item.title}
                             IconComponent={<Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />}
                             onPress={() => navigation.navigate(item.targetScreen) }
@@ -55,7 +63,7 @@ function AccountScreen({ navigation }) {
                     }
                 />
             </View>
-            <ListItem
+            <ListItemSwipable
                 title="Log Out"
                 IconComponent={
                     <Icon name="logout" backgroundColor="#ffe66d" />
