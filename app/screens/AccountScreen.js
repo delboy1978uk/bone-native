@@ -8,6 +8,7 @@ import colors from '../config/colors'
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
 import useAuth from "../hooks/useAuth";
+import useStyle from "../hooks/useStyle";
 
 const menuItems = [
     {
@@ -38,6 +39,16 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
     const { user, logout } = useAuth();
+    const style = useStyle();
+
+    const styles = StyleSheet.create({
+        screen: {
+            backgroundColor: style.backgroundColor
+        },
+        container: {
+            marginVertical: 20
+        }
+    });
 
     return (
         <Screen style={styles.screen}>
@@ -73,14 +84,5 @@ function AccountScreen({ navigation }) {
         </Screen>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: {
-        backgroundColor: colors.light
-    },
-    container: {
-        marginVertical: 20
-    }
-});
 
 export default AccountScreen;

@@ -16,6 +16,7 @@ import listingsApi from "../api/listings";
 import useApi from '../hooks/useApi'
 import UploadScreen from '../screens/UploadScreen'
 import useLocation from '../hooks/useLocation'
+import useStyle from "../hooks/useStyle";
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label('Title'),
@@ -49,6 +50,7 @@ function ListingEditScreen(props) {
     const location = useLocation();
     const [progressVisible, setProgressVisible] = useState(false);
     const [progress, setProgress] = useState(0);
+    const style = useStyle();
 
     const handleSubmit = async (listing, { resetForm }) => {
         setProgress(0);
@@ -66,6 +68,13 @@ function ListingEditScreen(props) {
 
         resetForm();
     }
+
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: style.backgroundColor,
+            padding: 10
+        }
+    });
 
     return (
         <Screen style={styles.container}>
@@ -121,11 +130,5 @@ function ListingEditScreen(props) {
         </Screen>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 10
-    }
-})
 
 export default ListingEditScreen;

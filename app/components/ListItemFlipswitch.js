@@ -6,8 +6,39 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 import Text from '../components/Text'
 import colors from "../config/colors";
+import useStyle from "../hooks/useStyle";
 
 function ListItemFlipswitch({title, IconComponent, isOn, onColor, offColor, onToggle = () => {}}) {
+    const style = useStyle();
+    const styles = StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+            backgroundColor: style.backgroundColor
+        },
+        detailsContainer: {
+            flex: 1,
+            marginLeft: 10,
+            justifyContent: "center"
+        },
+        image: {
+            width: 70,
+            height: 70,
+            borderRadius: 35,
+        },
+        title: {
+            color: style.text.color,
+            fontWeight: "500",
+        },
+        subtitle: {
+            color: colors.medium
+        }
+    });
+
+    onColor = onColor ? onColor : style.flipswitch.onColor
+    offColor = offColor ? offColor : style.flipswitch.offColor
+
     return (
         <View style={styles.container}>
             {IconComponent}
@@ -24,30 +55,5 @@ function ListItemFlipswitch({title, IconComponent, isOn, onColor, offColor, onTo
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 15,
-        backgroundColor: colors.white
-    },
-    detailsContainer: {
-        flex: 1,
-        marginLeft: 10,
-        justifyContent: "center"
-    },
-    image: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-    },
-    title: {
-        fontWeight: "500",
-    },
-    subtitle: {
-        color: colors.medium
-    }
-});
 
 export default ListItemFlipswitch;

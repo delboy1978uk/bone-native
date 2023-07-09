@@ -29,6 +29,7 @@ import useAuth from "../hooks/useAuth";
 import useCache from "../hooks/useCache";
 import useCamera from "../hooks/useCamera";
 import usePhotos from "../hooks/usePhotos";
+import useStyle from "../hooks/useStyle";
 
 const validationSchema = Yup.object().shape({
     firstname: Yup.string().required().min(2).max(60).label('First name'),
@@ -45,6 +46,7 @@ function EditProfileScreen(props) {
     const [progress, setProgress] = useState(0);
     const [profileImage, setProfileImage] = useState(null);
     const [profileBackground, setProfileBackground] = useState(null);
+    const style = useStyle();
 
     const { updateUser, user} = useAuth();
     const updateProfileApi = useApi(userApi.updateProfile);
@@ -140,6 +142,36 @@ function EditProfileScreen(props) {
         });
     }
 
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: style.backgroundColor
+        },
+        wallpaper: {
+            height: 240,
+            width: '100%',
+            backgroundColor: colors.secondary
+        },
+        image: {
+            width: 150,
+            height: 150,
+            borderRadius: 75,
+            marginTop: -75,
+            borderColor: colors.white,
+            borderWidth: 7,
+            backgroundColor: colors.light,
+        },
+        fullWidth: {
+            width: '100%'
+        },
+        centred: {
+            width: '100%',
+        },
+        imageContainer: {
+            alignItems: "center",
+            width: '100%',
+        }
+    })
+
     return (
         <>
             <KeyboardAvoidingView
@@ -214,32 +246,5 @@ function EditProfileScreen(props) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    wallpaper: {
-        height: 240,
-        width: '100%',
-        backgroundColor: colors.secondary
-    },
-    image: {
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        marginTop: -75,
-        borderColor: colors.white,
-        borderWidth: 7,
-        backgroundColor: colors.light,
-    },
-    fullWidth: {
-        width: '100%'
-    },
-    centred: {
-        width: '100%',
-    },
-    imageContainer: {
-        alignItems: "center",
-        width: '100%',
-    }
-})
 
 export default EditProfileScreen;

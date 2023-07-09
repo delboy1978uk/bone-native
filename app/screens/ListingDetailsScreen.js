@@ -8,10 +8,39 @@ import colors from '../config/colors'
 import ContactSellerForm from '../components/ContactSellerForm';
 import ListItemSwipable from '../components/ListItemSwipable'
 import Text from '../components/Text'
+import useStyle from "../hooks/useStyle";
 
 function ListingDetailsScreen({ route }) {
-
+    const style = useStyle();
     const listing = route.params;
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1
+        },
+        image: {
+            width: '100%',
+            height: 200
+        },
+        detailsContainer: {
+        },
+        userContainer: {
+            marginVertical: 10,
+        },
+        title: {
+            paddingHorizontal: 20,
+            paddingTop: 20,
+            fontSize: 24,
+            fontWeight: '500',
+            color: style.text.color
+        },
+        price: {
+            paddingHorizontal: 20,
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: colors.secondary,
+            marginVertical: 10
+        }
+    });
 
     return (
         <KeyboardAvoidingView
@@ -34,31 +63,5 @@ function ListingDetailsScreen({ route }) {
         </KeyboardAvoidingView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    image: {
-        width: '100%',
-        height: 250
-    },
-    detailsContainer: {
-        padding: 20,
-    },
-    userContainer: {
-        marginVertical: 5,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '500'
-    },
-    price: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: colors.secondary,
-        marginVertical: 10
-    }
-});
 
 export default ListingDetailsScreen;

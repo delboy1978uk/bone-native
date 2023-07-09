@@ -15,12 +15,14 @@ import Icon from "../components/Icon";
 import routes from "../navigation/routes";
 import navigation from "../navigation/rootNavigation";
 import useNotifications from "../hooks/useNotifications";
+import useStyle from "../hooks/useStyle";
 
 const Tab = createBottomTabNavigator();
 
 function AppNavigator(props) {
     useNotifications();
     const {token, setToken} = useState(null);
+    const style = useStyle();
 
     return (
         <>
@@ -28,18 +30,18 @@ function AppNavigator(props) {
         <Tab.Navigator
             screenOptions={{
                 tabBarActiveTintColor: "tomato",
-                tabBarActiveBackgroundColor: "white",
-                tabBarInactiveBackgroundColor: "white",
+                tabBarActiveBackgroundColor: style.backgroundColor,
+                tabBarInactiveBackgroundColor: style.backgroundColor,
                 tabBarInactiveTintColor: "grey",
                 tabBarStyle: [
                     {
-                        "display": "flex"
+                        display: "flex",
                     },
                     null
                 ],
                 tabBarLabelStyle: {
                     fontSize: 12,
-                }
+                },
             }}
         >
             <Tab.Screen
