@@ -17,22 +17,12 @@ function SettingsScreen({ navigation }) {
     const styles = StyleSheet.create({
         screen: {
             backgroundColor: style.backgroundColor
-        },
-        container: {
-            marginVertical: 20
         }
     });
 
     return (
         <Screen style={styles.screen}>
-            <View style={styles.container}>
-                <DarkModeSetting />
-
-                <ListItemFlipswitch
-                    IconComponent={<Icon name={'brightness-2'} backgroundColor={colors.dark} />}
-                    title={'हिन्दी'}
-                />
-            </View>
+            <DarkModeSetting />
         </Screen>
     );
 }

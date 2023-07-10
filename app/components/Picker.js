@@ -7,7 +7,7 @@ import Text from './Text'
 import PickerItem from './PickerItem'
 import PickerItemComponent from './PickerItemComponent'
 import Screen from './Screen'
-import defaultStyles from '../config/styles'
+import useStyle from "../hooks/useStyle";
 
 function Picker({
    icon,
@@ -20,6 +20,34 @@ function Picker({
    numColumns = 1
 }) {
     const [modalVisible, setModalVisible] = useState(false);
+    const defaultStyles = useStyle();
+
+    const style = StyleSheet.create({
+        container: {
+            backgroundColor: defaultStyles.formInput.backgroundColor,
+            borderRadius: 25,
+            flexDirection: 'row',
+            width: '100%',
+            padding: 15,
+            marginVertical: 10,
+        },
+        icon: {
+            marginRight: 10
+        },
+        modal: {
+            flex: 1,
+            padding: 15,
+            backgroundColor: defaultStyles.backgroundColor,
+            color: defaultStyles.text.color
+        },
+        placeholder: {
+            flex: 1,
+            color: defaultStyles.colors.medium
+        },
+        text: {
+            flex: 1
+        }
+    })
 
     return (
         <View>
@@ -55,30 +83,5 @@ function Picker({
         </View>
     );
 }
-
-const style = StyleSheet.create({
-    container: {
-        backgroundColor: defaultStyles.colors.light,
-        borderRadius: 25,
-        flexDirection: 'row',
-        width: '100%',
-        padding: 15,
-        marginVertical: 10,
-    },
-    icon: {
-        marginRight: 10
-    },
-    modal: {
-        flex: 1,
-        padding: 15
-    },
-    placeholder: {
-        flex: 1,
-        color: defaultStyles.colors.medium
-    },
-    text: {
-        flex: 1
-    }
-})
 
 export default Picker;

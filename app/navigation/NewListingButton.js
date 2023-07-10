@@ -21,7 +21,7 @@ function NewListingButton({ onPress }) {
             bottom: 25
         },
         icon: {
-            color: style.text.color
+            color: style.navButton.color
         },
         tab: {
             backgroundColor: style.backgroundColor

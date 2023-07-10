@@ -15,7 +15,7 @@ function ListItemFlipswitch({title, IconComponent, isOn, onColor, offColor, onTo
             flexDirection: 'row',
             alignItems: 'center',
             padding: 15,
-            backgroundColor: style.backgroundColor
+            backgroundColor: style.box.backgroundColor
         },
         detailsContainer: {
             flex: 1,

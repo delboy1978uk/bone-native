@@ -5,11 +5,30 @@ import colors from '../config/colors'
 import Icon from './Icon';
 import useCamera from '../hooks/useCamera';
 import usePhotos from '../hooks/usePhotos';
+import useStyle from "../hooks/useStyle";
 
 function ImageInput({imageUri, onChangeImage, onCancel = () => {}, mode = 'both'}) {
 
     const camera = useCamera();
     const photos = usePhotos();
+    const style = useStyle();
+
+    const styles = StyleSheet.create({
+        container: {
+            alignItems: 'center',
+            backgroundColor: style.formInput.backgroundColor,
+            color: style.formInput.color,
+            borderRadius: 15,
+            justifyContent: 'center',
+            height: 100,
+            width: 100,
+            overflow: 'hidden'
+        },
+        image: {
+            width: '100%',
+            height: '100%',
+        }
+    })
 
     const handlePress = async () => {
         if (!imageUri) {
@@ -74,21 +93,5 @@ function ImageInput({imageUri, onChangeImage, onCancel = () => {}, mode = 'both'
         </TouchableWithoutFeedback>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        backgroundColor: colors.light,
-        borderRadius: 15,
-        justifyContent: 'center',
-        height: 100,
-        width: 100,
-        overflow: 'hidden'
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    }
-})
 
 export default ImageInput;
