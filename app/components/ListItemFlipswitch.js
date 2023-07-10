@@ -8,7 +8,7 @@ import Text from '../components/Text'
 import colors from "../config/colors";
 import useStyle from "../hooks/useStyle";
 
-function ListItemFlipswitch({title, IconComponent, isOn, onColor, offColor, onToggle = () => {}}) {
+function ListItemFlipswitch({title, subtitle, IconComponent, isOn, onColor, offColor, onToggle = () => {}}) {
     const style = useStyle();
     const styles = StyleSheet.create({
         container: {
@@ -44,6 +44,7 @@ function ListItemFlipswitch({title, IconComponent, isOn, onColor, offColor, onTo
             {IconComponent}
             <View style={styles.detailsContainer}>
                 <Text style={styles.title} numberOfLines={1}>{title}</Text>
+                {subtitle && <Text numberOfLines={2} style={styles.subtitle}>{subtitle}</Text> }
             </View>
             <ToggleSwitch
                 isOn={isOn}
