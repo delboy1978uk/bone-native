@@ -11,15 +11,24 @@ import Button from '../components/Button'
 import Text from '../components/Text'
 import routes from '../navigation/routes'
 import useApi from '../hooks/useApi'
+import useStyle from '../hooks/useStyle'
 
 function ListingsScreen({navigation}) {
 
     const getListingsApi = useApi(listingsApi.getListings);
     const [refreshing, setRefreshing] = useState(false);
+    const style = useStyle();
 
     useEffect(() => {
         getListingsApi.request();
     }, []);
+
+    const styles = StyleSheet.create({
+        screen: {
+            paddingHorizontal: 10,
+            backgroundColor: style.backgroundColor
+        }
+    })
 
     return (
         <>
@@ -51,12 +60,5 @@ function ListingsScreen({navigation}) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: {
-        paddingHorizontal: 10,
-        backgroundColor: colors.light
-    }
-})
 
 export default ListingsScreen;

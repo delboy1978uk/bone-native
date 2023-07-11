@@ -6,12 +6,41 @@ import Image from '../components/Image'
 import Text from '../components/Text'
 import colors from '../config/colors'
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import useStyle from "../hooks/useStyle";
 
-function ListItem({title, subtitle, image, IconComponent, onPress, renderRightActions, displayCheverons}) {
+function ListItemSwipable({title, subtitle, image, IconComponent, onPress, renderRightActions, displayCheverons}) {
+    const style = useStyle();
+
     if (!title && subtitle) {
         title = subtitle;
         subtitle = null;
     }
+
+    const styles = StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 15,
+            backgroundColor: style.box.backgroundColor
+        },
+        detailsContainer: {
+            flex: 1,
+            marginLeft: 10,
+            justifyContent: "center"
+        },
+        image: {
+            width: 70,
+            height: 70,
+            borderRadius: 35,
+        },
+        title: {
+            color: style.text.color,
+            fontWeight: "500"
+        },
+        subtitle: {
+            color: colors.medium
+        }
+    });
 
     return (
         <Swipeable renderRightActions={renderRightActions}>
@@ -32,29 +61,4 @@ function ListItem({title, subtitle, image, IconComponent, onPress, renderRightAc
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 15,
-        backgroundColor: colors.white
-    },
-    detailsContainer: {
-        flex: 1,
-        marginLeft: 10,
-        justifyContent: "center"
-    },
-    image: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-    },
-    title: {
-        fontWeight: "500"
-    },
-    subtitle: {
-        color: colors.medium
-    }
-});
-
-export default ListItem;
+export default ListItemSwipable;

@@ -13,13 +13,14 @@ import Button from "../components/Button"
 import apiClient from "../api/client"
 import logger from '../utility/logger';
 import navigation from "../navigation/rootNavigation"
-import navigationTheme from "../navigation/NavigationTheme"
 import OfflineNotice from "../components/OfflineNotice"
 import Screen from "../components/Screen";
 import Text from "../components/Text"
 import WelcomeScreen from "../screens/WelcomeScreen";
 import settings from "../config/settings";
 import Storage from "../auth/storage";
+import useStyle from "../hooks/useStyle";
+import useNavigationTheme from "../hooks/useNavigationTheme";
 
 logger.start();
 SplashScreen.preventAutoHideAsync();
@@ -28,6 +29,8 @@ export default function AppEntryScreen() {
 
     const [user, setUser] = useState();
     const [isReady, setIsReady] = useState(false);
+    const navigationTheme = useNavigationTheme();
+    console.log(navigationTheme)
 
     const restoreUser = async () => {
         const authToken = await authStorage.getAuthToken();

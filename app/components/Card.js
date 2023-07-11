@@ -4,8 +4,33 @@ import {Image} from 'react-native-expo-image-cache';
 
 import Text from './Text'
 import colors from '../config/colors'
+import useStyle from "../hooks/useStyle";
 
 function Card({title, subtitle, imageUrl, onPress, thumbnaiilUrl}) {
+    const style = useStyle();
+
+    const styles = StyleSheet.create({
+        card: {
+            borderRadius: 15,
+            backgroundColor: style.box.backgroundColor,
+            marginBottom: 20,
+            overflow: "hidden"
+        },
+        image: {
+            width: '100%',
+            height: 200,
+        },
+        detailsContainer: {
+            padding: 20,
+        },
+        title: {
+          color: style.text.color
+        },
+        subtitle: {
+            color: style.errorText.color
+        }
+    });
+
     return (
         <TouchableWithoutFeedback onPress={onPress} >
             <View style={styles.card}>
@@ -27,24 +52,5 @@ function Card({title, subtitle, imageUrl, onPress, thumbnaiilUrl}) {
         </TouchableWithoutFeedback>
     );
 }
-
-const styles = StyleSheet.create({
-    card: {
-        borderRadius: 15,
-        backgroundColor: colors.white,
-        marginBottom: 20,
-        overflow: "hidden"
-    },
-    image: {
-        width: '100%',
-        height: 200,
-    },
-    detailsContainer: {
-        padding: 20,
-    },
-    subtitle: {
-        color: 'red'
-    }
-});
 
 export default Card;

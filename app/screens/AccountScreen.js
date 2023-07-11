@@ -1,20 +1,29 @@
 import React from 'react';
 
 import {FlatList, StyleSheet, View} from "react-native";
-import ListItem from '../components/ListItem'
+import ListItemSwipable from '../components/ListItemSwipable'
 import Icon from '../components/Icon'
 import Screen from '../components/Screen'
 import colors from '../config/colors'
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
 import useAuth from "../hooks/useAuth";
+import useStyle from "../hooks/useStyle";
 
 const menuItems = [
+    {
+        title: "Settings",
+        icon: {
+            name: "cog",
+            backgroundColor: colors.primary
+        },
+        targetScreen: 'Settings'
+    },
     {
         title: "My Listings",
         icon: {
             name: "format-list-bulleted",
-            backgroundColor: colors.primary
+            backgroundColor: colors.secondary
         },
         targetScreen: 'Listings'
     },
@@ -22,7 +31,7 @@ const menuItems = [
         title: "My Messages",
         icon: {
             name: "email",
-            backgroundColor: colors.secondary
+            backgroundColor: colors.primary
         },
         targetScreen: 'Messages'
     },
@@ -30,11 +39,21 @@ const menuItems = [
 
 function AccountScreen({ navigation }) {
     const { user, logout } = useAuth();
+    const style = useStyle();
+
+    const styles = StyleSheet.create({
+        screen: {
+            backgroundColor: style.backgroundColor
+        },
+        container: {
+            marginVertical: 20
+        }
+    });
 
     return (
         <Screen style={styles.screen}>
             <View style={styles.container}>
-                <ListItem
+                <ListItemSwipable
                     title={user.person?.firstname}
                     subtitle={user.email}
                     image={{ uri: user.person?.image}}
@@ -47,7 +66,7 @@ function AccountScreen({ navigation }) {
                     ItemSeparatorComponent={() => <ListItemSeparator />}
                     keyExtractor={menuItem => menuItem.title}
                     renderItem={ ({item}) =>
-                        <ListItem
+                        <ListItemSwipable
                             title={item.title}
                             IconComponent={<Icon name={item.icon.name} backgroundColor={item.icon.backgroundColor} />}
                             onPress={() => navigation.navigate(item.targetScreen) }
@@ -55,7 +74,7 @@ function AccountScreen({ navigation }) {
                     }
                 />
             </View>
-            <ListItem
+            <ListItemSwipable
                 title="Log Out"
                 IconComponent={
                     <Icon name="logout" backgroundColor="#ffe66d" />
@@ -65,14 +84,5 @@ function AccountScreen({ navigation }) {
         </Screen>
     );
 }
-
-const styles = StyleSheet.create({
-    screen: {
-        backgroundColor: colors.light
-    },
-    container: {
-        marginVertical: 20
-    }
-});
 
 export default AccountScreen;
