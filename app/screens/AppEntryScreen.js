@@ -30,7 +30,6 @@ export default function AppEntryScreen() {
     const [user, setUser] = useState();
     const [isReady, setIsReady] = useState(false);
     const navigationTheme = useNavigationTheme();
-    console.log(navigationTheme)
 
     const restoreUser = async () => {
         const authToken = await authStorage.getAuthToken();

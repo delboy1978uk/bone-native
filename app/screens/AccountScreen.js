@@ -20,12 +20,12 @@ const menuItems = [
         targetScreen: 'Settings'
     },
     {
-        title: "My Listings",
+        title: "Sample Map",
         icon: {
-            name: "format-list-bulleted",
+            name: "map-marker",
             backgroundColor: colors.secondary
         },
-        targetScreen: 'Listings'
+        targetScreen: 'Sample Map'
     },
     {
         title: "My Messages",

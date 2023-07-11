@@ -6,7 +6,7 @@ import colors from "../config/colors";
 export default useNavigationTheme = () => {
     const style = useStyle();
     const theme = style.dark ? DarkTheme : DefaultTheme
-    x = {
+    return {
         ...theme,
         colors: {
             ...theme.colors,
@@ -16,8 +16,4 @@ export default useNavigationTheme = () => {
         },
         dark: style.dark
     }
-
-    console.log(x)
-
-    return x;
 };

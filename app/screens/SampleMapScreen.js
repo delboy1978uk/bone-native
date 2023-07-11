@@ -1,20 +1,15 @@
-import {useState} from "react";
-import * as SplashScreen from "expo-splash-screen";
-import {Platform, StyleSheet, Text, View, Button} from "react-native";
-import ToggleSwitch from "toggle-switch-react-native";
+import React from 'react';
+import {StyleSheet, Text, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 import MapView from "react-native-maps";
 
-SplashScreen.hideAsync();
-
-function TestZone(props) {
-
+function SampleMapScreen(props) {
     return (
         <View style={styles.container}>
             <MapView style={styles.map} />
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -26,4 +21,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TestZone;
+export default SampleMapScreen;
