@@ -8,7 +8,7 @@ import useStyle from './app/hooks/useStyle'
 
 export default function App() {
     const style = useStyle();
-    console.log(style);
+
     return (
         <View style={{height: '100%', backgroundColor: style.backgroundColor}}>
             <AppEntryScreen />
