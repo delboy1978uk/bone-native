@@ -18,15 +18,15 @@ git add .
 git commit -a
 ```
 ### backend
-A configured project is available on the `feature/full` branch of Bone Framework here 
-https://github.com/delboy1978uk/boneframework/tree/feature/full. 
+A pre-configured project built using Bone Framework with OAuth2 login
+https://github.com/delboy1978uk/bone-native-backend-api
 This example uses the recommended Docker dev environment for the backend.
 ```
 git clone git@github.com:delboy1978uk/lamp.git lampstack
 cd lampstack
 rm -fr .git
 rm -fr code
-git clone git@github.com:delboy1978uk/boneframework.git code
+git clone git@github.com:delboy1978uk/bone-native-backend-api.git code
 cd code
 rm -fr .git
 git init
